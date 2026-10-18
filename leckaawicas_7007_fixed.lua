@@ -3149,103 +3149,34 @@ local _foundRemotes = {}
 _cX:CreateSection("Komşu Oyunu - Kredi Basma")
 
 _cX:CreateToggle({
-  Name="Otomatik Kredi Basma",
-  Desc="Komşu oyununda Minutes/kredi basar (RemoteEvent bypass)",
+  Name="Kredi Basma (Hafif Mod)",
+  Desc="Oyunu kasmaması için optimize edildi",
   CurrentValue=false,
   Flag="AutoMoneyFarm",
   Callback=function(_enabled)
     _moneyFarming = _enabled
     if _enabled then
-      _bo("Kredi Basma","Komşu oyunu kredi basma başladı!","Success")
+      _bo("Kredi Basma","Hafif mod başladı (2 saniye aralık)","Success")
       
       task.spawn(function()
-        -- RemoteEvent/Function'ları bul
-        local ReplicatedStorage = game:GetService("ReplicatedStorage")
-        
-        for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
-          if remote:IsA("RemoteEvent") or remote:IsA("RemoteFunction") then
-            local name = string.lower(remote.Name)
-            if string.find(name, "money") or 
-               string.find(name, "cash") or 
-               string.find(name, "credit") or
-               string.find(name, "kredi") or
-               string.find(name, "coin") or
-               string.find(name, "currency") or
-               string.find(name, "reward") or
-               string.find(name, "claim") or
-               string.find(name, "give") or
-               string.find(name, "add") then
-              table.insert(_foundRemotes, remote)
-            end
-          end
-        end
-        
-        while _moneyFarming and task.wait(0.3) do
+        while _moneyFarming and task.wait(2) do
           pcall(function()
-            -- 1. Leaderstats değerini direkt değiştir
+            -- Sadece leaderstats değiştir (en hafif yöntem)
             local leaderstats = _m:FindFirstChild("leaderstats")
             if leaderstats then
               for _, stat in ipairs(leaderstats:GetChildren()) do
-                local statName = string.lower(stat.Name)
-                if string.find(statName, "minute") or 
-                   string.find(statName, "money") or 
-                   string.find(statName, "cash") or 
-                   string.find(statName, "kredi") or
-                   string.find(statName, "credit") then
-                  pcall(function()
-                    if stat:IsA("IntValue") or stat:IsA("NumberValue") then
-                      stat.Value = stat.Value + _moneyAmount
-                    end
-                  end)
-                end
-              end
-            end
-            
-            -- 2. RemoteEvent'leri tetikle
-            for _, remote in ipairs(_foundRemotes) do
-              if remote and remote.Parent then
                 pcall(function()
-                  if remote:IsA("RemoteEvent") then
-                    remote:FireServer(_moneyAmount)
-                    remote:FireServer("AddMoney", _moneyAmount)
-                    remote:FireServer("GiveMoney", _moneyAmount)
-                    remote:FireServer({Amount = _moneyAmount})
-                  elseif remote:IsA("RemoteFunction") then
-                    remote:InvokeServer(_moneyAmount)
-                    remote:InvokeServer("AddMoney", _moneyAmount)
+                  if stat:IsA("IntValue") or stat:IsA("NumberValue") then
+                    stat.Value = stat.Value + _moneyAmount
                   end
                 end)
-              end
-            end
-            
-            -- 3. Workspace'deki tüm para/coin objelerini topla
-            local hrp = _bx()
-            if hrp and firetouchinterest then
-              for _, obj in ipairs(_f:GetDescendants()) do
-                if obj:IsA("BasePart") and obj.Parent then
-                  local objName = string.lower(obj.Name)
-                  if (string.find(objName, "coin") or 
-                      string.find(objName, "money") or 
-                      string.find(objName, "cash") or
-                      string.find(objName, "collect") or
-                      string.find(objName, "pickup")) then
-                    local dist = (obj.Position - hrp.Position).Magnitude
-                    if dist <= 150 then
-                      pcall(function()
-                        firetouchinterest(hrp, obj, 0)
-                        task.wait(0.01)
-                        firetouchinterest(hrp, obj, 1)
-                      end)
-                    end
-                  end
-                end
               end
             end
           end)
         end
       end)
     else
-      _bo("Kredi Basma","Otomatik kredi basma durduruldu.","Info")
+      _bo("Kredi Basma","Durduruldu.","Info")
     end
   end
 })
@@ -3262,67 +3193,37 @@ _cX:CreateSlider({
 })
 
 _cX:CreateButton({
-  Name="Hızlı Kredi Bas (x10)",
-  Desc="Anında 10 kere kredi ekle + RemoteEvent tetikle",
+  Name="Hızlı Kredi Ekle",
+  Desc="Anında tek seferde ekle (oyunu kasmaması için)",
   Style="Primary",
   Icon="dollar-sign",
   Callback=function()
-    local added = 0
-    
-    -- 1. Leaderstats direkt değiştir
+    local added = false
     pcall(function()
       local leaderstats = _m:FindFirstChild("leaderstats")
       if leaderstats then
         for _, stat in ipairs(leaderstats:GetChildren()) do
-          local statName = string.lower(stat.Name)
-          if string.find(statName, "minute") or
-             string.find(statName, "money") or 
-             string.find(statName, "cash") or 
-             string.find(statName, "coin") or
-             string.find(statName, "kredi") or
-             string.find(statName, "credit") then
-            for i = 1, 10 do
-              pcall(function()
-                if stat:IsA("IntValue") or stat:IsA("NumberValue") then
-                  stat.Value = stat.Value + _moneyAmount
-                  added = added + _moneyAmount
-                end
-              end)
-              task.wait(0.05)
-            end
-          end
-        end
-      end
-    end)
-    
-    -- 2. Tüm RemoteEvent'leri ateşle
-    pcall(function()
-      local ReplicatedStorage = game:GetService("ReplicatedStorage")
-      for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
-        if remote:IsA("RemoteEvent") then
           pcall(function()
-            for i = 1, 10 do
-              remote:FireServer(_moneyAmount * 10)
-              remote:FireServer("AddMoney", _moneyAmount * 10)
-              remote:FireServer({Amount = _moneyAmount * 10, Type = "Money"})
-              task.wait(0.05)
+            if stat:IsA("IntValue") or stat:IsA("NumberValue") then
+              stat.Value = stat.Value + (_moneyAmount * 10)
+              added = true
             end
           end)
         end
       end
     end)
     
-    if added > 0 then
-      _bo("Kredi Basma",added.." kredi eklendi + RemoteEvent'ler tetiklendi!","Success")
+    if added then
+      _bo("Kredi Basma",(_moneyAmount * 10).." kredi eklendi!","Success")
     else
-      _bo("Kredi Basma","RemoteEvent'ler tetiklendi (leaderstats bulunamadı)","Info")
+      _bo("Kredi Basma","Leaderstats bulunamadı veya oyun korumalı.","Warning")
     end
   end
 })
 
 _cX:CreateButton({
-  Name="Max Kredi Yap",
-  Desc="Kredi/Minutes değerini maksimuma çıkar (999M)",
+  Name="Max Kredi (999M)",
+  Desc="Tek seferde maksimum yap",
   Style="Danger",
   Icon="trending-up",
   Callback=function()
@@ -3331,129 +3232,212 @@ _cX:CreateButton({
       local leaderstats = _m:FindFirstChild("leaderstats")
       if leaderstats then
         for _, stat in ipairs(leaderstats:GetChildren()) do
-          local statName = string.lower(stat.Name)
-          if string.find(statName, "minute") or
-             string.find(statName, "money") or 
-             string.find(statName, "cash") or 
-             string.find(statName, "coin") or
-             string.find(statName, "kredi") or
-             string.find(statName, "credit") then
-            pcall(function()
-              if stat:IsA("IntValue") then
-                stat.Value = 999999999
-                success = true
-              elseif stat:IsA("NumberValue") then
-                stat.Value = 999999999
-                success = true
-              end
-            end)
-          end
-        end
-      end
-    end)
-    
-    -- RemoteEvent'leri de maksimum değerle ateşle
-    pcall(function()
-      local ReplicatedStorage = game:GetService("ReplicatedStorage")
-      for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
-        if remote:IsA("RemoteEvent") and remote.Name:lower():find("money") or remote.Name:lower():find("add") then
           pcall(function()
-            remote:FireServer(999999999)
+            if stat:IsA("IntValue") or stat:IsA("NumberValue") then
+              stat.Value = 999999999
+              success = true
+            end
           end)
         end
       end
     end)
     
     if success then
-      _bo("Kredi Basma","Kredi maksimuma çıkarıldı! (999M)","Success")
+      _bo("Kredi Basma","999M kredi yapıldı!","Success")
     else
-      _bo("Kredi Basma","Leaderstats bulunamadı, RemoteEvent'ler denendi.","Warning")
-    end
-  end
-})
-
-_cX:CreateToggle({
-  Name="Yakındaki Paraları Topla",
-  Desc="Çevredeki coin/money objelerini otomatik topla",
-  CurrentValue=false,
-  Flag="AutoCollectMoney",
-  Callback=function(_collect)
-    if _collect then
-      task.spawn(function()
-        while _collect and task.wait(0.2) do
-          pcall(function()
-            local hrp = _bx()
-            if not hrp then return end
-            
-            for _, obj in ipairs(_f:GetDescendants()) do
-              if obj:IsA("BasePart") then
-                local objName = string.lower(obj.Name)
-                if (string.find(objName, "coin") or 
-                    string.find(objName, "money") or 
-                    string.find(objName, "cash") or
-                    string.find(objName, "gem") or
-                    string.find(objName, "para")) then
-                  local dist = (obj.Position - hrp.Position).Magnitude
-                  if dist <= 100 then
-                    pcall(function()
-                      if firetouchinterest then
-                        firetouchinterest(hrp, obj, 0)
-                        task.wait(0.01)
-                        firetouchinterest(hrp, obj, 1)
-                      end
-                    end)
-                  end
-                end
-              end
-            end
-          end)
-        end
-      end)
-      _bo("Para Toplama","Otomatik para toplama aktif.","Success")
+      _bo("Kredi Basma","Leaderstats bulunamadı (oyun korumalı olabilir).","Warning")
     end
   end
 })
 
 _cX:CreateButton({
-  Name="Kredi Durumu & RemoteEvent'ler",
-  Desc="Mevcut kredi/Minutes durumunu ve bulunan RemoteEvent'leri gösterir",
+  Name="Leaderstats Bilgisi",
+  Desc="Oyundaki para değerlerini gösterir",
   Icon="info",
   Callback=function()
-    local info = "💰 "
-    local remoteInfo = "📡 RemoteEvents: "
-    
-    -- Leaderstats bilgisi
+    local info = ""
     pcall(function()
       local leaderstats = _m:FindFirstChild("leaderstats")
       if leaderstats then
         for _, stat in ipairs(leaderstats:GetChildren()) do
-          info = info .. stat.Name .. ": " .. tostring(stat.Value) .. " • "
+          info = info .. stat.Name .. ": " .. tostring(stat.Value) .. " | "
         end
       else
-        info = info .. "Leaderstats bulunamadı. "
+        info = "Leaderstats bulunamadı"
       end
     end)
+    _bo("Para Durumu",info,"Info")
+  end
+})
+
+
+-- MUTE ATINCA OTOMATİK YENİDEN KATIL
+local _autoRejoinOnMute = false
+local _muteCheckInterval = 10 -- 10 saniyede bir kontrol et
+
+_cX:CreateSection("Mute Koruması")
+
+_cX:CreateToggle({
+  Name="Mute Atınca Yeniden Katıl",
+  Desc="Voice chat'ten mute yiyince otomatik sunucuya yeniden katılır",
+  CurrentValue=false,
+  Flag="AutoRejoinOnMute",
+  Callback=function(_enabled)
+    _autoRejoinOnMute = _enabled
+    if _enabled then
+      _bo("Mute Koruması","Aktif! Mute yersen otomatik yeniden katılacaksın.","Success")
+      
+      task.spawn(function()
+        local lastMuteCheck = tick()
+        
+        while _autoRejoinOnMute and task.wait(_muteCheckInterval) do
+          pcall(function()
+            local VoiceService = game:GetService("VoiceChatService")
+            
+            if VoiceService then
+              -- Mute durumunu kontrol et
+              local isMuted = false
+              
+              pcall(function()
+                -- Kendi mute durumunu kontrol et
+                local player = game:GetService("Players").LocalPlayer
+                if VoiceService:IsVoiceEnabledForUserIdAsync then
+                  local voiceEnabled = VoiceService:IsVoiceEnabledForUserIdAsync(player.UserId)
+                  if not voiceEnabled then
+                    isMuted = true
+                  end
+                end
+              end)
+              
+              -- Alternatif kontrol: VoiceState
+              pcall(function()
+                local VoiceState = game:GetService("Players").LocalPlayer:FindFirstChild("VoiceState")
+                if VoiceState then
+                  local IsMuted = VoiceState:FindFirstChild("IsMuted")
+                  if IsMuted and IsMuted.Value == true then
+                    isMuted = true
+                  end
+                end
+              end)
+              
+              -- Eğer mute ise yeniden katıl
+              if isMuted then
+                _bo("Mute Tespit Edildi!","5 saniye sonra yeniden katılıyorum...","Warning")
+                task.wait(5)
+                
+                -- Yeniden katıl
+                local TeleportService = game:GetService("TeleportService")
+                local Players = game:GetService("Players")
+                
+                TeleportService:Teleport(game.PlaceId, Players.LocalPlayer)
+              end
+            end
+          end)
+        end
+      end)
+    else
+      _bo("Mute Koruması","Kapatıldı.","Info")
+    end
+  end
+})
+
+_cX:CreateSlider({
+  Name="Kontrol Sıklığı",
+  Desc="Kaç saniyede bir mute kontrolü yapılsın",
+  Range={5,60},
+  Increment=5,
+  Suffix=" sn",
+  CurrentValue=10,
+  Flag="MuteCheckInterval",
+  Callback=function(_interval)
+    _muteCheckInterval = _interval
+  end
+})
+
+_cX:CreateButton({
+  Name="Manuel Yeniden Katıl",
+  Desc="Hemen şu an yeniden katıl (mute olmasan bile)",
+  Style="Primary",
+  Icon="refresh-cw",
+  Callback=function()
+    _bo("Yeniden Katılma","3 saniye sonra yeniden katılıyorsun...","Info")
+    task.wait(3)
     
-    -- RemoteEvent bilgisi
+    local TeleportService = game:GetService("TeleportService")
+    local Players = game:GetService("Players")
+    
     pcall(function()
-      local ReplicatedStorage = game:GetService("ReplicatedStorage")
-      local count = 0
-      for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
-        if remote:IsA("RemoteEvent") or remote:IsA("RemoteFunction") then
-          local name = remote.Name:lower()
-          if name:find("money") or name:find("cash") or name:find("add") or name:find("give") then
-            remoteInfo = remoteInfo .. remote.Name .. ", "
-            count = count + 1
+      TeleportService:Teleport(game.PlaceId, Players.LocalPlayer)
+    end)
+  end
+})
+
+_cX:CreateButton({
+  Name="Mute Durumu Kontrol Et",
+  Desc="Şu anda mute olup olmadığını kontrol et",
+  Icon="mic",
+  Callback=function()
+    local status = "Bilinmiyor"
+    
+    pcall(function()
+      local VoiceService = game:GetService("VoiceChatService")
+      local player = game:GetService("Players").LocalPlayer
+      
+      if VoiceService and VoiceService.IsVoiceEnabledForUserIdAsync then
+        local voiceEnabled = VoiceService:IsVoiceEnabledForUserIdAsync(player.UserId)
+        
+        if voiceEnabled then
+          status = "✅ Mute değilsin, konuşabilirsin!"
+        else
+          status = "❌ MUTE oldun! Yeniden katıl butonunu kullan."
+        end
+      end
+      
+      -- VoiceState kontrolü
+      local VoiceState = player:FindFirstChild("VoiceState")
+      if VoiceState then
+        local IsMuted = VoiceState:FindFirstChild("IsMuted")
+        if IsMuted then
+          if IsMuted.Value == true then
+            status = status .. " (VoiceState: MUTED)"
+          else
+            status = status .. " (VoiceState: OK)"
           end
         end
       end
-      if count == 0 then
-        remoteInfo = remoteInfo .. "Hiç bulunamadı"
-      end
     end)
     
-    _bo("Kredi Durumu",info,"Info")
-    task.wait(0.5)
-    _bo("RemoteEvent'ler",remoteInfo,"Info")
+    _bo("Voice Chat Durumu",status,"Info")
+  end
+})
+
+_cX:CreateButton({
+  Name="Farklı Sunucuya Katıl",
+  Desc="Rastgele başka bir sunucuya geç",
+  Icon="globe",
+  Callback=function()
+    _bo("Sunucu Değiştir","Farklı sunucuya geçiyorsun...","Info")
+    task.wait(2)
+    
+    local TeleportService = game:GetService("TeleportService")
+    local HttpService = game:GetService("HttpService")
+    local Players = game:GetService("Players")
+    
+    pcall(function()
+      -- Farklı sunucu bul
+      local servers = HttpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"))
+      
+      if servers and servers.data then
+        for i, server in ipairs(servers.data) do
+          if server.id ~= game.JobId and server.playing < server.maxPlayers then
+            TeleportService:TeleportToPlaceInstance(game.PlaceId, server.id, Players.LocalPlayer)
+            return
+          end
+        end
+      end
+      
+      -- Bulamadıysa normal rejoin
+      TeleportService:Teleport(game.PlaceId, Players.LocalPlayer)
+    end)
   end
 })
