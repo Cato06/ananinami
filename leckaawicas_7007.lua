@@ -3009,7 +3009,7 @@ _cY:CreateToggle({
   end
 })
 
-_bo("PEKKAN","v10.3 ULTIMATE - Para Basma + Agresif Voice Bypass + Tüm Animasyonlar • Yapımcı: ".._o,"Success")
+_bo("PEKKAN","v10.1 yüklendi • Tüm animasyonlar aktif • Voice chat mute bypass eklendi • Yapımcı: ".._o,"Success")
 
 -- AGRESİF MUTE BYPASS - Sürekli çalışır
 local _agresifMuteBypass = false
@@ -3141,131 +3141,263 @@ _cX:CreateSlider({
 })
 
 
--- KOMŞU OYUNU KREDİ BASMA SİSTEMİ
-local _moneyFarming = false
-local _moneyAmount = 1000
-local _foundRemotes = {}
+-- NEIGHBORS OYUNU ÖZELLİKLERİ
+_cV:CreateSection("Neighbors Özel")
 
-_cX:CreateSection("Komşu Oyunu - Kredi Basma")
-
-_cX:CreateToggle({
-  Name="Kredi Basma (Hafif Mod)",
-  Desc="Oyunu kasmaması için optimize edildi",
-  CurrentValue=false,
-  Flag="AutoMoneyFarm",
-  Callback=function(_enabled)
-    _moneyFarming = _enabled
-    if _enabled then
-      _bo("Kredi Basma","Hafif mod başladı (2 saniye aralık)","Success")
+-- Karakter Kopyalama
+local _copiedCharacter = nil
+_cV:CreateButton({
+  Name="Hedefin Karakterini Kopyala",
+  Desc="Seçili oyuncunun görünüşünü kopyala",
+  Style="Primary",
+  Icon="user",
+  Callback=function()
+    local target = _bB.Target
+    if not target then
+      _bo("Karakter Kopyala","Önce bir oyuncu seç (Oyuncular sekmesi).","Warning")
+      return
+    end
+    
+    local targetChar = target.Character
+    if not targetChar then
+      _bo("Karakter Kopyala","Hedefin karakteri bulunamadı.","Warning")
+      return
+    end
+    
+    local myChar = _m.Character
+    if not myChar then
+      _bo("Karakter Kopyala","Senin karakterin bulunamadı.","Warning")
+      return
+    end
+    
+    -- Karakteri kopyala
+    pcall(function()
+      -- Kıyafetleri kopyala
+      local humanoidDesc = game:GetService("Players"):GetHumanoidDescriptionFromUserId(target.UserId)
+      local myHumanoid = myChar:FindFirstChildOfClass("Humanoid")
       
-      task.spawn(function()
-        while _moneyFarming and task.wait(2) do
-          pcall(function()
-            -- Sadece leaderstats değiştir (en hafif yöntem)
-            local leaderstats = _m:FindFirstChild("leaderstats")
-            if leaderstats then
-              for _, stat in ipairs(leaderstats:GetChildren()) do
-                pcall(function()
-                  if stat:IsA("IntValue") or stat:IsA("NumberValue") then
-                    stat.Value = stat.Value + _moneyAmount
-                  end
-                end)
+      if myHumanoid and humanoidDesc then
+        myHumanoid:ApplyDescription(humanoidDesc)
+        _copiedCharacter = {
+          userId = target.UserId,
+          displayName = target.DisplayName
+        }
+        _bo("Karakter Kopyala",target.DisplayName.." karakteri kopyalandı!","Success")
+      end
+    end)
+  end
+})
+
+_cV:CreateButton({
+  Name="Orijinal Karaktere Dön",
+  Desc="Kendi karakterine geri dön",
+  Icon="rotate-ccw",
+  Callback=function()
+    local myChar = _m.Character
+    if not myChar then return end
+    
+    pcall(function()
+      local humanoidDesc = game:GetService("Players"):GetHumanoidDescriptionFromUserId(_m.UserId)
+      local myHumanoid = myChar:FindFirstChildOfClass("Humanoid")
+      
+      if myHumanoid and humanoidDesc then
+        myHumanoid:ApplyDescription(humanoidDesc)
+        _bo("Karakter","Orijinal karaktere dönüldü.","Success")
+      end
+    end)
+  end
+})
+
+-- Mağaza Bypass
+_cV:CreateSection("Mağaza Bypass")
+
+local _shopBypassActive = false
+_cV:CreateToggle({
+  Name="Ücretsiz Mağaza",
+  Desc="Mağazadaki tüm eşyaları ücretsiz kullan",
+  CurrentValue=false,
+  Flag="NeighborsShopBypass",
+  Callback=function(_enabled)
+    _shopBypassActive = _enabled
+    if _enabled then
+      _bo("Mağaza Bypass","Ücretsiz mağaza aktif! Tüm eşyalar ücretsiz.","Success")
+    else
+      _bo("Mağaza Bypass","Kapatıldı.","Info")
+    end
+  end
+})
+
+-- Shop bypass için hook
+task.spawn(function()
+  while task.wait(1) do
+    if _shopBypassActive then
+      pcall(function()
+        -- ReplicatedStorage'daki eşyaları kontrol et
+        local ReplicatedStorage = game:GetService("ReplicatedStorage")
+        
+        -- Neighbors oyununda genellikle Items veya Shop klasörü vardır
+        for _, folder in ipairs({"Items", "Shop", "Store", "GameData"}) do
+          local itemFolder = ReplicatedStorage:FindFirstChild(folder)
+          if itemFolder then
+            for _, item in ipairs(itemFolder:GetDescendants()) do
+              -- Fiyat değerlerini sıfırla
+              if item:IsA("IntValue") or item:IsA("NumberValue") then
+                if string.match(string.lower(item.Name), "price") or 
+                   string.match(string.lower(item.Name), "cost") or
+                   string.match(string.lower(item.Name), "fiyat") then
+                  item.Value = 0
+                end
               end
             end
-          end)
+          end
+        end
+        
+        -- Oyuncunun parasını yüksek tut
+        local leaderstats = _m:FindFirstChild("leaderstats")
+        if leaderstats then
+          for _, stat in ipairs(leaderstats:GetChildren()) do
+            if string.match(string.lower(stat.Name), "money") or 
+               string.match(string.lower(stat.Name), "cash") or
+               string.match(string.lower(stat.Name), "para") or
+               string.match(string.lower(stat.Name), "coin") then
+              if stat:IsA("IntValue") or stat:IsA("NumberValue") then
+                stat.Value = 999999
+              end
+            end
+          end
         end
       end)
-    else
-      _bo("Kredi Basma","Durduruldu.","Info")
     end
   end
-})
+end)
 
-_cX:CreateSlider({
-  Name="Basılacak Miktar",
-  Range={100,100000},
-  Increment=100,
-  CurrentValue=1000,
-  Flag="MoneyAmount",
-  Callback=function(_amount)
-    _moneyAmount = _amount
+_cV:CreateButton({
+  Name="Tüm Eşyaları Aç",
+  Desc="Mağazadaki tüm eşyaları anında al",
+  Style="Primary",
+  Icon="shopping-bag",
+  Callback=function()
+    pcall(function()
+      local ReplicatedStorage = game:GetService("ReplicatedStorage")
+      local unlocked = 0
+      
+      -- Oyuncunun envanterini bul
+      local playerData = _m:FindFirstChild("Data") or _m:FindFirstChild("PlayerData")
+      
+      if playerData then
+        local inventory = playerData:FindFirstChild("Inventory") or 
+                         playerData:FindFirstChild("OwnedItems") or
+                         playerData:FindFirstChild("Items")
+        
+        if inventory then
+          -- Tüm eşyaları ekle
+          for _, folder in ipairs({"Items", "Shop", "Store"}) do
+            local itemFolder = ReplicatedStorage:FindFirstChild(folder)
+            if itemFolder then
+              for _, item in ipairs(itemFolder:GetChildren()) do
+                local newItem = item:Clone()
+                newItem.Parent = inventory
+                unlocked = unlocked + 1
+              end
+            end
+          end
+        end
+      end
+      
+      if unlocked > 0 then
+        _bo("Mağaza",unlocked.." eşya açıldı!","Success")
+      else
+        _bo("Mağaza","Eşya sistemi bulunamadı. Farklı metod deneyin.","Warning")
+      end
+    end)
   end
 })
 
-_cX:CreateButton({
-  Name="Hızlı Kredi Ekle",
-  Desc="Anında tek seferde ekle (oyunu kasmaması için)",
-  Style="Primary",
+_cV:CreateButton({
+  Name="Sonsuz Para",
+  Desc="Para miktarını maksimuma çıkar",
   Icon="dollar-sign",
   Callback=function()
-    local added = false
     pcall(function()
       local leaderstats = _m:FindFirstChild("leaderstats")
       if leaderstats then
         for _, stat in ipairs(leaderstats:GetChildren()) do
-          pcall(function()
-            if stat:IsA("IntValue") or stat:IsA("NumberValue") then
-              stat.Value = stat.Value + (_moneyAmount * 10)
-              added = true
-            end
-          end)
+          if stat:IsA("IntValue") or stat:IsA("NumberValue") then
+            stat.Value = 999999
+          end
         end
-      end
-    end)
-    
-    if added then
-      _bo("Kredi Basma",(_moneyAmount * 10).." kredi eklendi!","Success")
-    else
-      _bo("Kredi Basma","Leaderstats bulunamadı veya oyun korumalı.","Warning")
-    end
-  end
-})
-
-_cX:CreateButton({
-  Name="Max Kredi (999M)",
-  Desc="Tek seferde maksimum yap",
-  Style="Danger",
-  Icon="trending-up",
-  Callback=function()
-    local success = false
-    pcall(function()
-      local leaderstats = _m:FindFirstChild("leaderstats")
-      if leaderstats then
-        for _, stat in ipairs(leaderstats:GetChildren()) do
-          pcall(function()
-            if stat:IsA("IntValue") or stat:IsA("NumberValue") then
-              stat.Value = 999999999
-              success = true
-            end
-          end)
-        end
-      end
-    end)
-    
-    if success then
-      _bo("Kredi Basma","999M kredi yapıldı!","Success")
-    else
-      _bo("Kredi Basma","Leaderstats bulunamadı (oyun korumalı olabilir).","Warning")
-    end
-  end
-})
-
-_cX:CreateButton({
-  Name="Leaderstats Bilgisi",
-  Desc="Oyundaki para değerlerini gösterir",
-  Icon="info",
-  Callback=function()
-    local info = ""
-    pcall(function()
-      local leaderstats = _m:FindFirstChild("leaderstats")
-      if leaderstats then
-        for _, stat in ipairs(leaderstats:GetChildren()) do
-          info = info .. stat.Name .. ": " .. tostring(stat.Value) .. " | "
-        end
+        _bo("Para","Sonsuz para eklendi!","Success")
       else
-        info = "Leaderstats bulunamadı"
+        -- Alternatif metod
+        local playerData = _m:FindFirstChild("Data") or _m:FindFirstChild("PlayerData")
+        if playerData then
+          for _, value in ipairs(playerData:GetChildren()) do
+            if value:IsA("IntValue") or value:IsA("NumberValue") then
+              if string.match(string.lower(value.Name), "money") or 
+                 string.match(string.lower(value.Name), "cash") or
+                 string.match(string.lower(value.Name), "para") or
+                 string.match(string.lower(value.Name), "coin") then
+                value.Value = 999999
+              end
+            end
+          end
+          _bo("Para","Para eklendi!","Success")
+        else
+          _bo("Para","Para sistemi bulunamadı.","Warning")
+        end
       end
     end)
-    _bo("Para Durumu",info,"Info")
+  end
+})
+
+-- Gelişmiş eşya bypass
+_cV:CreateButton({
+  Name="Tüm Kilitlileri Aç (Gelişmiş)",
+  Desc="RemoteEvent ile sunucuya gönder",
+  Icon="unlock",
+  Callback=function()
+    pcall(function()
+      local ReplicatedStorage = game:GetService("ReplicatedStorage")
+      local unlocked = 0
+      
+      -- RemoteEvent bul
+      local remotes = {}
+      for _, obj in ipairs(ReplicatedStorage:GetDescendants()) do
+        if obj:IsA("RemoteEvent") or obj:IsA("RemoteFunction") then
+          if string.match(string.lower(obj.Name), "shop") or
+             string.match(string.lower(obj.Name), "buy") or
+             string.match(string.lower(obj.Name), "purchase") or
+             string.match(string.lower(obj.Name), "unlock") then
+            table.insert(remotes, obj)
+          end
+        end
+      end
+      
+      -- Tüm eşyaları almayı dene
+      for _, folder in ipairs({"Items", "Shop", "Store", "GameData"}) do
+        local itemFolder = ReplicatedStorage:FindFirstChild(folder)
+        if itemFolder then
+          for _, item in ipairs(itemFolder:GetChildren()) do
+            for _, remote in ipairs(remotes) do
+              pcall(function()
+                if remote:IsA("RemoteEvent") then
+                  remote:FireServer("Buy", item.Name)
+                  remote:FireServer("Purchase", item.Name)
+                  remote:FireServer("Unlock", item.Name)
+                  remote:FireServer(item.Name)
+                elseif remote:IsA("RemoteFunction") then
+                  remote:InvokeServer("Buy", item.Name)
+                  remote:InvokeServer("Purchase", item.Name)
+                  remote:InvokeServer("Unlock", item.Name)
+                end
+                unlocked = unlocked + 1
+              end)
+            end
+          end
+        end
+      end
+      
+      _bo("Mağaza Bypass",unlocked.." eşya için işlem gönderildi.","Success")
+    end)
   end
 })
