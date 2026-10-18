@@ -351,23 +351,261 @@ else
   _bo("Animasyon","Panoya kopyalama desteklenmiyor.","Error")
 end
 end
-,})do
-  local function _eR(_eS)_bo("\195\135ok yak\196\177nda",_eS.." \195\188zerinde \195\167al\196\177\197\159\196\177yoruz, bir sonraki s\195\188r\195\188mde burada olacak.","Info")
+,})
+
+-- TÜM ANİMASYON ÖZELLİKLERİ AKTİF!
+_cY:CreateSection("Emote Oynatıcı")
+
+_cY:CreateDropdown({
+  Name="Emote Seç",
+  Options=_dc,
+  CurrentOption="El Salla",
+  Flag="QuickEmoteSelect",
+  Callback=function(_emoteChoice)
+    if type(_emoteChoice)=="table" then
+      _emoteChoice=_emoteChoice[1]
+    end
+    _dg=_emoteChoice
   end
-  _cY:CreateSection("\195\135ok yak\196\177nda")_cY:CreateButton({Name="Emote ve animasyon b\195\182l\195\188m\195\188 haz\196\177rlan\196\177yor",Desc="Daha iyi bir kitapl\196\177k, \195\182nizleme ve favoriler ile geri d\195\182necek",Style="Primary",Icon="lock",Callback=function()_eR("Emote ve animasyon b\195\182l\195\188m\195\188")
+})
+
+_cY:CreateButton({
+  Name="Seçili Emote'u Oynat",
+  Style="Primary",
+  Icon="play",
+  Callback=function()
+    local _animId = _db[_dg]
+    if _animId then
+      _di(_animId)
+      _bo("Emote",_dg.." oynatılıyor.","Success")
+    end
   end
-  ,})_cY:CreateSection("Emote'lar \194\183 \195\167ok yak\196\177nda")_cY:CreateButton({Name="Emote kitapl\196\177\196\159\196\177",Desc="T\195\188m emote'lar, arama ve favoriler \194\183 \195\135ok yak\196\177nda",Icon="lock",Callback=function()_eR("Emote kitapl\196\177\196\159\196\177")
+})
+
+_cY:CreateButton({
+  Name="Rastgele Emote",
+  Icon="shuffle",
+  Callback=function()
+    local randomIdx = math.random(1, #_dc)
+    local randomEmote = _dc[randomIdx]
+    local animId = _db[randomEmote]
+    if animId then
+      _di(animId)
+      _bo("Emote","Rastgele: "..randomEmote,"Success")
+    end
   end
-  ,})_cY:CreateButton({Name="Emote oynat\196\177c\196\177",Desc="D\195\182ng\195\188, h\196\177z ayar\196\177 ve \195\182zel ID deste\196\159i \194\183 \195\135ok yak\196\177nda",Icon="lock",Callback=function()_eR("Emote oynat\196\177c\196\177")
+})
+
+_cY:CreateToggle({
+  Name="Döngü",
+  Desc="Emote'u sürekli tekrarla",
+  CurrentValue=true,
+  Flag="EmoteLoopActive",
+  Callback=function(_loopOn)
+    _df=_loopOn
+    if _dd then
+      _dd.Looped=_loopOn
+    end
   end
-  ,})_cY:CreateSection("Animasyon paketleri \194\183 \195\167ok yak\196\177nda")_cY:CreateButton({Name="Paket se\195\167ici",Desc="Ninja, Zombi, Robot, Vampir ve daha fazlas\196\177 \194\183 \195\135ok yak\196\177nda",Icon="lock",Callback=function()_eR("Animasyon paketleri")
+})
+
+_cY:CreateSlider({
+  Name="Emote Hızı",
+  Range={0.1,5},
+  Increment=0.1,
+  Suffix="x",
+  CurrentValue=1,
+  Flag="EmoteSpeedActive",
+  Callback=function(_speedVal)
+    _de=_speedVal
+    if _dd then
+      pcall(function()
+        _dd:AdjustSpeed(_speedVal)
+      end)
+    end
   end
-  ,})_cY:CreateButton({Name="\195\150zel paket slotlar\196\177",Desc=("Y\195\188r\195\188me, ko\197\159ma, z\196\177plama animasyonunu kendi ID'nle de\196\159i\197\159tir ".."\194\183 \195\135ok yak\196\177nda"),Icon="lock",Callback=function()_eR("\195\150zel paket slotlar\196\177")
+})
+
+_cY:CreateInput({
+  Name="Özel Emote ID",
+  PlaceholderText="örn. 507771019",
+  MaxLength=20,
+  Flag="CustomEmoteID",
+  Callback=function(_customId,_enter)
+    local _numId = tonumber(_customId)
+    if _numId and _enter then
+      _di(_numId)
+      _bo("Emote","Özel ID oynatıldı: ".._customId,"Success")
+    elseif _enter then
+      _bo("Emote","Geçersiz ID.","Warning")
+    end
   end
-  ,})_cY:CreateSection("Animasyon kopyalama \194\183 \195\167ok yak\196\177nda")_cY:CreateButton({Name="Hedefin animasyonunu kopyala",Desc=("Se\195\167ti\196\159in oyuncunun animasyonlar\196\177n\196\177 canl\196\177 kopyalar \194\183 \195\135ok y".."ak\196\177nda"),Icon="lock",Callback=function()_eR("Animasyon kopyalama")
+})
+
+_cY:CreateButton({
+  Name="Emote'u Durdur",
+  Style="Danger",
+  Icon="square",
+  Callback=function()
+    _dh()
+    _bo("Emote","Durduruldu.","Info")
   end
-  ,})
-end
+})
+
+_cY:CreateSection("Animasyon Paketleri")
+
+_cY:CreateDropdown({
+  Name="Paket Seç",
+  Options=_dx,
+  CurrentOption="Ninja",
+  Flag="AnimPackSelect",
+  Callback=function(_packChoice)
+    if type(_packChoice)=="table" then
+      _packChoice=_packChoice[1]
+    end
+    _dy=_packChoice
+  end
+})
+
+_cY:CreateButton({
+  Name="Paketi Uygula",
+  Style="Primary",
+  Icon="check",
+  Callback=function()
+    _dR(_dy)
+  end
+})
+
+_cY:CreateButton({
+  Name="Varsayılana Sıfırla",
+  Icon="rotate-ccw",
+  Callback=function()
+    _dT()
+  end
+})
+
+_cY:CreateSection("Özel Paket Slotları")
+
+local _slotNames = {"Duruş","Yürüme","Koşma","Zıplama","Düşme","Tırmanma"}
+local _slotMap = {
+  ["Duruş"]="idle",
+  ["Yürüme"]="walk",
+  ["Koşma"]="run",
+  ["Zıplama"]="jump",
+  ["Düşme"]="fall",
+  ["Tırmanma"]="climb"
+}
+
+_cY:CreateDropdown({
+  Name="Slot Seç",
+  Options=_slotNames,
+  CurrentOption="Yürüme",
+  Flag="CustomSlotSelect",
+  Callback=function(_slotChoice)
+    if type(_slotChoice)=="table" then
+      _slotChoice=_slotChoice[1]
+    end
+    _ed=_slotMap[_slotChoice] or "walk"
+  end
+})
+
+_cY:CreateInput({
+  Name="Slot Animasyon ID",
+  Desc="Seçili slotu özel ID ile değiştir",
+  PlaceholderText="animasyon id",
+  MaxLength=20,
+  Callback=function(_slotId,_enterKey)
+    if not _enterKey then
+      return
+    end
+    local _numSlotId = tonumber(_slotId)
+    local _char = _m.Character
+    local _animate = _char and _char:FindFirstChild("Animate")
+    if not _numSlotId or not _animate then
+      _bo("Paketler","Geçersiz ID veya Animate scripti yok.","Warning")
+      return
+    end
+    for _i,_slot in ipairs(_dA) do
+      if _slot[1]==_ed then
+        local _folder = _animate:FindFirstChild(_slot[1])
+        local _anim = _folder and _folder:FindFirstChild(_slot[2])
+        if _anim then
+          local _key = _slot[1].._slot[2]
+          if not _dz[_key] then
+            _dz[_key]=_anim.AnimationId
+          end
+          _anim.AnimationId="rbxassetid://"..tostring(_numSlotId)
+        end
+      end
+    end
+    _dB(_animate)
+    _bo("Paketler","Slot güncellendi.","Success")
+  end
+})
+
+_cY:CreateSection("Animasyon Kopyalama")
+
+_cY:CreateToggle({
+  Name="Hedefin Animasyonunu Kopyala",
+  Desc="Seçili oyuncunun animasyonlarını canlı kopyalar",
+  CurrentValue=false,
+  Flag="CopyAnimActive",
+  Callback=function(_copyOn)
+    _bB.CopyAnim=_copyOn
+    if _copyOn and not _bB.Target then
+      _bo("Animasyon Kopyalama","Önce bir oyuncu seç (Oyuncular sekmesi).","Warning")
+    end
+    if not _copyOn then
+      _eq()
+    end
+  end
+})
+
+_cY:CreateButton({
+  Name="Hedefin Animasyon ID'lerini Kopyala",
+  Icon="copy",
+  Callback=function()
+    local _target = _bB.Target
+    local _targetHum = _target and _target.Character and _target.Character:FindFirstChildOfClass("Humanoid")
+    local _targetAnim = _targetHum and _targetHum:FindFirstChildOfClass("Animator")
+    if not _targetAnim then
+      _bo("Animasyon","Önce geçerli bir oyuncu seç.","Warning")
+      return
+    end
+    local _idList = {}
+    for _,_track in ipairs(_targetAnim:GetPlayingAnimationTracks()) do
+      local _animId = _track.Animation and _track.Animation.AnimationId
+      if _animId and _animId~="" then
+        table.insert(_idList,(string.gsub(_animId,"%D","")))
+      end
+    end
+    if #_idList==0 then
+      _bo("Animasyon","Oynayan animasyon yok.","Info")
+    elseif _bN(table.concat(_idList,", ")) then
+      _bo("Animasyon",#_idList.." ID kopyalandı.","Success")
+    else
+      _bo("Animasyon","Panoya kopyalama desteklenmiyor.","Error")
+    end
+  end
+})
+
+_cY:CreateButton({
+  Name="Tüm Animasyonları Durdur",
+  Desc="Karakterdeki tüm animasyonları durdur",
+  Style="Danger",
+  Icon="square",
+  Callback=function()
+    _dh()
+    local _anim = _bz()
+    if _anim then
+      for _, _track in ipairs(_anim:GetPlayingAnimationTracks()) do
+        _track:Stop(0.1)
+      end
+    end
+    _bo("Animasyon","Tüm animasyonlar durduruldu.","Success")
+  end
+})
+
 _cS:CreateSection("H\196\177z ve z\196\177plama")_cS:CreateToggle({Name="H\196\177z",CurrentValue=false,Flag="SpeedToggle",Callback=function(_eT)_bB.Speed=_eT if not _eT then
   local _eU=_bv()if _eU then
     _eU.WalkSpeed=16
@@ -2679,97 +2917,8 @@ _cX:CreateToggle({
   end
 })
 
--- Gelişmiş Animasyon Özellikleri
-_cY:CreateSection("Animasyon Oynat\196\177c\196\177 Geli\197\159tirildi")
-
-local _currentAnimation = nil
-local _animSpeed = 1
-local _animLoop = true
-
-_cY:CreateDropdown({
-  Name="H\196\177zl\196\177 Animasyon Se\195\167imi",
-  Options=_dc,
-  CurrentOption="El Salla",
-  Flag="QuickEmote",
-  Callback=function(_anim)
-    if type(_anim)=="table" then
-      _anim=_anim[1]
-    end
-    -- Animasyonu otomatik oynat
-    local _animId = _db[_anim]
-    if _animId then
-      _di(_animId)
-      _bo("Animasyon",_anim.." oynat\196\177l\196\177yor.","Success")
-    end
-  end
-})
-
-_cY:CreateToggle({
-  Name="Animasyon tekrar\196\177",
-  Desc="Animasyonu s\195\188rekli tekrarla",
-  CurrentValue=true,
-  Flag="QuickAnimLoop",
-  Callback=function(_loop)
-    _animLoop = _loop
-    _df = _loop
-    if _dd then
-      _dd.Looped = _loop
-    end
-  end
-})
-
-_cY:CreateSlider({
-  Name="Animasyon h\196\177z\196\177",
-  Range={0.1,5},
-  Increment=0.1,
-  Suffix="x",
-  CurrentValue=1,
-  Flag="QuickAnimSpeed",
-  Callback=function(_speed)
-    _animSpeed = _speed
-    _de = _speed
-    if _dd then
-      pcall(function()
-        _dd:AdjustSpeed(_speed)
-      end)
-    end
-  end
-})
-
-_cY:CreateButton({
-  Name="Rastgele Emote Oynat",
-  Desc="Rastgele bir emote se\195\167 ve oynat",
-  Style="Primary",
-  Icon="shuffle",
-  Callback=function()
-    local randomIndex = math.random(1, #_dc)
-    local randomEmote = _dc[randomIndex]
-    local animId = _db[randomEmote]
-    if animId then
-      _di(animId)
-      _bo("Animasyon","Rastgele: "..randomEmote,"Success")
-    end
-  end
-})
-
-_cY:CreateButton({
-  Name="T\195\188m Animasyonlar\196\177 Durdur",
-  Desc="Oynat\196\177lan t\195\188m animasyonlar\196\177 durdur",
-  Style="Danger",
-  Icon="square",
-  Callback=function()
-    _dh()
-    local animator = _bz()
-    if animator then
-      for _, track in ipairs(animator:GetPlayingAnimationTracks()) do
-        track:Stop(0.1)
-      end
-    end
-    _bo("Animasyon","T\195\188m animasyonlar durduruldu.","Success")
-  end
-})
-
-_cY:CreateSection("Animasyon Efektleri")
+-- Görsel Efektler
+_cY:CreateSection("Görsel Efektler")
 
 _cY:CreateToggle({
   Name="Animasyon \196\177\197\159\196\177\196\159\196\177",
@@ -2860,4 +3009,4 @@ _cY:CreateToggle({
   end
 })
 
-_bo("PEKKAN","v10 y\195\188klendi. Yap\196\177mc\196\177: ".._o.." + Ses & Animasyon Geli\197\159tirmeleri","Success")
+_bo("PEKKAN","v10.1 yüklendi • Tüm animasyonlar aktif • Voice chat mute bypass eklendi • Yapımcı: ".._o,"Success")
