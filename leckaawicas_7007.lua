@@ -3362,4 +3362,4 @@ _cY:CreateToggle({
   end
 })
 
-_bo("PEKKAN","v10.3 yüklendi • 5dk mute bypass eklendi • Para basma • Tüm animasyonlar • Yapımcı: ".._o,"Success")
+_bo("PEKKAN","v10.3 FİNAL - Para basma + Voice bypass + Tüm animasyonlar • Yapımcı: ".._o,"Success")
