@@ -2795,7 +2795,163 @@ end
 end
 })_cV:CreateSlider({Name="Fener parlakl\196\177\196\159\196\177",Range={0.5,6},Increment=0.1,CurrentValue=2.5,Flag="NBLightBright",Callback=function(_Ab)_xU.LightBright=_Ab
 end
-})_cV:CreateSection("Bilgi")_cV:CreateButton({Name="Haritay\196\177 tara",Desc="Bulunan etkile\197\159im, e\197\159ya ve NPC say\196\177s\196\177n\196\177 g\195\182sterir",Icon="refresh-cw",Callback=function()_bo("Kom\197\159ular","Etkile\197\159im: ".._zz(_xW).."  \194\183  E\197\159ya/t\196\177klanabilir: ".._zz(_xX).."  \194\183  NPC: ".._zz(_xY),"Info")
+})
+
+-- PARA/KREDİ BASMA (Bloxburg ve benzeri oyunlar için)
+_cV:CreateSection("Para / Kredi Basma")
+
+local _moneyAmount = 10000
+local _moneyLoop = false
+
+_cV:CreateInput({
+  Name="Para Miktarı",
+  Desc="Basmak istediğin para/kredi miktarı",
+  PlaceholderText="örn. 50000",
+  MaxLength=15,
+  CurrentValue="10000",
+  Flag="MoneyAmount",
+  Callback=function(_amount)
+    local _num = tonumber(_amount)
+    if _num then
+      _moneyAmount = _num
+    end
+  end
+})
+
+_cV:CreateButton({
+  Name="Para Bas (Tek Seferlik)",
+  Desc="Belirlenen miktarda para/kredi ekler",
+  Style="Primary",
+  Icon="dollar-sign",
+  Callback=function()
+    local success = pcall(function()
+      -- Bloxburg için (Money değeri)
+      local stats = _m:FindFirstChild("leaderstats")
+      if stats then
+        local money = stats:FindFirstChild("Money") or stats:FindFirstChild("money") or 
+                     stats:FindFirstChild("Cash") or stats:FindFirstChild("cash") or
+                     stats:FindFirstChild("Kredi") or stats:FindFirstChild("kredi") or
+                     stats:FindFirstChild("Credits") or stats:FindFirstChild("credits")
+        
+        if money and money:IsA("IntValue") or money:IsA("NumberValue") then
+          money.Value = money.Value + _moneyAmount
+          _bo("Para Basma","✅ ".._moneyAmount.." para eklendi! Toplam: "..money.Value,"Success")
+          return
+        end
+      end
+      
+      -- DataFolder kontrolü
+      local dataFolder = _m:FindFirstChild("DataFolder") or _m:FindFirstChild("Data")
+      if dataFolder then
+        local money = dataFolder:FindFirstChild("Money") or dataFolder:FindFirstChild("Cash") or
+                     dataFolder:FindFirstChild("Coins") or dataFolder:FindFirstChild("Credits")
+        if money then
+          money.Value = money.Value + _moneyAmount
+          _bo("Para Basma","✅ ".._moneyAmount.." para eklendi!","Success")
+          return
+        end
+      end
+      
+      -- PlayerData kontrolü
+      local playerData = _m:FindFirstChild("PlayerData")
+      if playerData then
+        local money = playerData:FindFirstChild("Money") or playerData:FindFirstChild("Cash")
+        if money then
+          money.Value = money.Value + _moneyAmount
+          _bo("Para Basma","✅ ".._moneyAmount.." para eklendi!","Success")
+          return
+        end
+      end
+      
+      -- Hiçbiri bulunamadı
+      _bo("Para Basma","❌ Para sistemi bulunamadı. Bu oyun desteklenmiyor olabilir.","Error")
+    end)
+    
+    if not success then
+      _bo("Para Basma","❌ Hata oluştu. Oyun client-side para koruması kullanıyor olabilir.","Error")
+    end
+  end
+})
+
+_cV:CreateToggle({
+  Name="Otomatik Para Basma",
+  Desc="Her saniye otomatik para ekler (dikkatli kullan!)",
+  CurrentValue=false,
+  Flag="AutoMoney",
+  Callback=function(_enabled)
+    _moneyLoop = _enabled
+    if _enabled then
+      task.spawn(function()
+        while _moneyLoop and task.wait(1) do
+          pcall(function()
+            local stats = _m:FindFirstChild("leaderstats")
+            if stats then
+              local money = stats:FindFirstChild("Money") or stats:FindFirstChild("money") or 
+                           stats:FindFirstChild("Cash") or stats:FindFirstChild("cash") or
+                           stats:FindFirstChild("Kredi") or stats:FindFirstChild("kredi")
+              if money then
+                money.Value = money.Value + _moneyAmount
+              end
+            end
+          end)
+        end
+      end)
+      _bo("Para Basma","⚠️ Otomatik para basma aktif! Her saniye ".._moneyAmount.." ekleniyor.","Warning")
+    else
+      _bo("Para Basma","Otomatik para basma durduruldu.","Info")
+    end
+  end
+})
+
+_cV:CreateButton({
+  Name="Max Para (999,999,999)",
+  Desc="Para değerini maksimuma çıkarır",
+  Style="Danger",
+  Icon="trending-up",
+  Callback=function()
+    pcall(function()
+      local stats = _m:FindFirstChild("leaderstats")
+      if stats then
+        local money = stats:FindFirstChild("Money") or stats:FindFirstChild("money") or 
+                     stats:FindFirstChild("Cash") or stats:FindFirstChild("cash") or
+                     stats:FindFirstChild("Kredi") or stats:FindFirstChild("kredi")
+        if money then
+          money.Value = 999999999
+          _bo("Para Basma","💰 Para maksimuma çıkarıldı: 999,999,999!","Success")
+        else
+          _bo("Para Basma","❌ Para değeri bulunamadı.","Error")
+        end
+      else
+        _bo("Para Basma","❌ Leaderstats bulunamadı.","Error")
+      end
+    end)
+  end
+})
+
+_cV:CreateButton({
+  Name="Mevcut Parayı Göster",
+  Desc="Şu anki para miktarını gösterir",
+  Icon="eye",
+  Callback=function()
+    pcall(function()
+      local stats = _m:FindFirstChild("leaderstats")
+      if stats then
+        local money = stats:FindFirstChild("Money") or stats:FindFirstChild("money") or 
+                     stats:FindFirstChild("Cash") or stats:FindFirstChild("cash") or
+                     stats:FindFirstChild("Kredi") or stats:FindFirstChild("kredi")
+        if money then
+          _bo("Para Bilgisi","💵 Mevcut paranız: "..tostring(money.Value),"Info")
+        else
+          _bo("Para Bilgisi","❌ Para değeri bulunamadı.","Error")
+        end
+      else
+        _bo("Para Bilgisi","❌ Leaderstats bulunamadı.","Error")
+      end
+    end)
+  end
+})
+
+_cV:CreateSection("Bilgi")_cV:CreateButton({Name="Haritay\196\177 tara",Desc="Bulunan etkile\197\159im, e\197\159ya ve NPC say\196\177s\196\177n\196\177 g\195\182sterir",Icon="refresh-cw",Callback=function()_bo("Kom\197\159ular","Etkile\197\159im: ".._zz(_xW).."  \194\183  E\197\159ya/t\196\177klanabilir: ".._zz(_xX).."  \194\183  NPC: ".._zz(_xY),"Info")
 end
 ,})
 end
@@ -2828,13 +2984,90 @@ _gF()task.defer(_hn)
 end
 )_hn()_ho()_cQ:LoadConfig()
 
--- Voice Chat Mute Bypass Özelliği
+-- Voice Chat Mute Bypass Özelliği - GÜÇLENDİRİLMİŞ!
 local _voiceEnabled = false
 local _originalVolume = 0.5
+local _forceUnmute = false
+local _muteBypassActive = false
+
 _cX:CreateSection("Ses (Voice Chat)")
+
 _cX:CreateToggle({
-  Name="Mute Bypass (Ses)",
-  Desc="Voice chat'te sessize al\196\177nsan bile seni duyurur",
+  Name="Güçlü Mute Bypass",
+  Desc="5 dakika mute bile olsan konuşabilirsin! (En güçlü mod)",
+  CurrentValue=false,
+  Flag="StrongMuteBypass",
+  Callback=function(_enabled)
+    _muteBypassActive = _enabled
+    if _enabled then
+      task.spawn(function()
+        _bo("Voice Chat","💪 GÜÇLENDİRİLMİŞ MUTE BYPASS AKTİF!","Success")
+        
+        while _muteBypassActive and task.wait(0.1) do -- Her 0.1 saniyede kontrol
+          pcall(function()
+            -- TextChatService kontrolü
+            local TextChatService = game:GetService("TextChatService")
+            if TextChatService then
+              pcall(function()
+                TextChatService.ChatVersion = Enum.ChatVersion.LegacyChatService
+              end)
+            end
+            
+            -- VoiceChatService kontrolü
+            local VoiceChat = game:GetService("VoiceChatService")
+            if VoiceChat then
+              -- Kendi mute durumunu zorla kaldır
+              pcall(function()
+                if VoiceChat:IsVoiceEnabledForUserIdAsync then
+                  local enabled = VoiceChat:IsVoiceEnabledForUserIdAsync(_m.UserId)
+                  if not enabled then
+                    -- Voice'u yeniden aktifleştirmeye çalış
+                    VoiceChat:UseAudio(true)
+                  end
+                end
+              end)
+              
+              -- Kendi mikrofonunu aç
+              pcall(function()
+                local participants = VoiceChat:GetParticipants()
+                for _, participantId in ipairs(participants) do
+                  if participantId == _m.UserId then
+                    local state = VoiceChat:GetParticipantState(participantId)
+                    if state and state.IsMuted then
+                      -- Zorla unmute
+                      VoiceChat:UnmuteParticipant(participantId)
+                    end
+                  end
+                end
+              end)
+            end
+            
+            -- SoundService kontrolü
+            local SoundService = game:GetService("SoundService")
+            pcall(function()
+              if SoundService.VolumeLevel < 0.5 then
+                SoundService.VolumeLevel = 1
+              end
+            end)
+            
+            -- Player kontrolü
+            pcall(function()
+              if _m.VoiceChatState then
+                _m.VoiceChatState = Enum.VoiceChatState.Enabled
+              end
+            end)
+          end)
+        end
+        
+        _bo("Voice Chat","Güçlü mute bypass durduruldu.","Info")
+      end)
+    end
+  end
+})
+
+_cX:CreateToggle({
+  Name="Mute Bypass (Normal)",
+  Desc="Voice chat'te sessize alınsan bile seni duyurur",
   CurrentValue=false,
   Flag="VoiceMuteBypass",
   Callback=function(_enabled)
@@ -2846,16 +3079,18 @@ _cX:CreateToggle({
             local VoiceChat = game:GetService("VoiceChatService")
             if VoiceChat then
               -- Mute bypass
-              if VoiceChat:IsVoiceEnabledForUserIdAsync(_m.UserId) then
-                local players = game:GetService("Players")
-                for _, player in ipairs(players:GetPlayers()) do
-                  if player ~= _m then
-                    pcall(function()
-                      local speaker = VoiceChat:GetSpeaker(player.UserId)
-                      if speaker then
-                        speaker.IsMuted = false
-                      end
-                    end)
+              if VoiceChat:IsVoiceEnabledForUserIdAsync then
+                if VoiceChat:IsVoiceEnabledForUserIdAsync(_m.UserId) then
+                  local players = game:GetService("Players")
+                  for _, player in ipairs(players:GetPlayers()) do
+                    if player ~= _m then
+                      pcall(function()
+                        local speaker = VoiceChat:GetSpeaker(player.UserId)
+                        if speaker then
+                          speaker.IsMuted = false
+                        end
+                      end)
+                    end
                   end
                 end
               end
@@ -2863,10 +3098,128 @@ _cX:CreateToggle({
           end)
         end
       end)
-      _bo("Voice Chat","Mute bypass aktif. Seni sessize alsalar bile duyulacaks\196\177n.","Success")
+      _bo("Voice Chat","Mute bypass aktif. Seni sessize alsalar bile duyulacaksın.","Success")
     else
-      _bo("Voice Chat","Mute bypass kapal\196\177.","Info")
+      _bo("Voice Chat","Mute bypass kapalı.","Info")
     end
+  end
+})
+
+_cX:CreateButton({
+  Name="Mute'u Anında Kaldır (Force Unmute)",
+  Desc="5 dakika mute yediysen bunu kullan!",
+  Style="Primary",
+  Icon="mic",
+  Callback=function()
+    local success = false
+    
+    -- Yöntem 1: VoiceChatService
+    pcall(function()
+      local VoiceChat = game:GetService("VoiceChatService")
+      if VoiceChat then
+        pcall(function()
+          local participants = VoiceChat:GetParticipants()
+          for _, participantId in ipairs(participants) do
+            if participantId == _m.UserId then
+              VoiceChat:UnmuteParticipant(participantId)
+              success = true
+            end
+          end
+        end)
+        
+        -- UseAudio metodunu çağır
+        pcall(function()
+          VoiceChat:UseAudio(true)
+          success = true
+        end)
+      end
+    end)
+    
+    -- Yöntem 2: Player state değiştir
+    pcall(function()
+      if _m.VoiceChatState then
+        _m.VoiceChatState = Enum.VoiceChatState.Enabled
+        success = true
+      end
+    end)
+    
+    -- Yöntem 3: Character kontrolü
+    pcall(function()
+      local char = _m.Character
+      if char then
+        local head = char:FindFirstChild("Head")
+        if head then
+          -- Voice related instance'ları kontrol et
+          for _, child in ipairs(head:GetChildren()) do
+            if child:IsA("Sound") and string.find(child.Name:lower(), "voice") then
+              child.Volume = 1
+              child.Playing = true
+              success = true
+            end
+          end
+        end
+      end
+    end)
+    
+    -- Yöntem 4: ReplicatedStorage kontrolü
+    pcall(function()
+      local RS = game:GetService("ReplicatedStorage")
+      local voiceEvents = RS:FindFirstChild("VoiceChatEvents")
+      if voiceEvents then
+        local unmuteEvent = voiceEvents:FindFirstChild("UnmutePlayer")
+        if unmuteEvent and unmuteEvent:IsA("RemoteEvent") then
+          unmuteEvent:FireServer()
+          success = true
+        end
+      end
+    end)
+    
+    if success then
+      _bo("Voice Chat","✅ Mute kaldırma denemesi yapıldı! Konuşmayı dene.","Success")
+      
+      -- Arka planda sürekli kontrol et
+      task.spawn(function()
+        for i = 1, 30 do -- 30 saniye boyunca
+          task.wait(1)
+          pcall(function()
+            local VoiceChat = game:GetService("VoiceChatService")
+            if VoiceChat then
+              VoiceChat:UseAudio(true)
+            end
+          end)
+        end
+      end)
+    else
+      _bo("Voice Chat","⚠️ Mute kaldırılamadı. 'Güçlü Mute Bypass' toggle'ını dene!","Warning")
+    end
+  end
+})
+
+_cX:CreateButton({
+  Name="Voice Chat'i Yeniden Başlat",
+  Desc="Ses sisteminini tamamen resetler",
+  Icon="refresh-cw",
+  Callback=function()
+    pcall(function()
+      -- Ses servisini resetle
+      local SoundService = game:GetService("SoundService")
+      local oldVolume = SoundService.VolumeLevel
+      SoundService.VolumeLevel = 0
+      task.wait(0.5)
+      SoundService.VolumeLevel = oldVolume
+      
+      -- Voice chat'i resetle
+      local VoiceChat = game:GetService("VoiceChatService")
+      if VoiceChat then
+        pcall(function()
+          VoiceChat:UseAudio(false)
+          task.wait(0.5)
+          VoiceChat:UseAudio(true)
+        end)
+      end
+      
+      _bo("Voice Chat","🔄 Voice chat yeniden başlatıldı!","Success")
+    end)
   end
 })
 
@@ -3009,567 +3362,140 @@ _cY:CreateToggle({
   end
 })
 
-_bo("PEKKAN","v10.1 yüklendi • Tüm animasyonlar aktif • Voice chat mute bypass eklendi • Yapımcı: ".._o,"Success")
-
--- AGRESİF MUTE BYPASS - Sürekli çalışır
-local _agresifMuteBypass = false
-_cX:CreateSection("Agresif Voice Bypass")
-_cX:CreateToggle({
-  Name="Agresif Mute Bypass",
-  Desc="Çok güçlü mute bypass - Sürekli aktif kalır",
-  CurrentValue=false,
-  Flag="AggressiveMuteBypass",
-  Callback=function(_enabled)
-    _agresifMuteBypass = _enabled
-    if _enabled then
-      _bo("Voice Bypass","Agresif mod aktif! Artık kimse seni susturamaz.","Success")
-      task.spawn(function()
-        while _agresifMuteBypass and task.wait(0.1) do
-          pcall(function()
-            -- VoiceChatService bypass
-            local VoiceService = game:GetService("VoiceChatService")
-            if VoiceService then
-              pcall(function() VoiceService.EnableDefaultVoice = true end)
-              
-              -- Tüm oyuncuların sesini aç
-              for _, player in ipairs(_b:GetPlayers()) do
-                if player ~= _m then
-                  pcall(function()
-                    local speaker = VoiceService:GetSpeaker(player.UserId)
-                    if speaker then
-                      speaker.IsMuted = false
-                      speaker.Volume = 1
-                    end
-                  end)
-                end
-              end
-            end
-            
-            -- SoundService ayarları
-            local SoundService = game:GetService("SoundService")
-            if SoundService then
-              pcall(function()
-                SoundService.VolumeLevel = 1
-                SoundService.RespectFilteringEnabled = false
-              end)
-            end
-            
-            -- Karakterdeki tüm ses ayarları
-            local char = _m.Character
-            if char then
-              local head = char:FindFirstChild("Head")
-              if head then
-                for _, obj in ipairs(head:GetDescendants()) do
-                  if obj:IsA("Sound") then
-                    pcall(function()
-                      obj.Volume = 1
-                      obj.Playing = true
-                    end)
-                  end
-                end
-              end
-            end
-          end)
-        end
-      end)
-    else
-      _bo("Voice Bypass","Agresif mod kapatıldı.","Info")
-    end
-  end
-})
-
-_cX:CreateButton({
-  Name="Force Unmute (Zorla Aç)",
-  Desc="Anında tüm mute'ları kaldır",
-  Style="Primary",
-  Icon="volume-2",
-  Callback=function()
-    pcall(function()
-      local VoiceService = game:GetService("VoiceChatService")
-      if VoiceService then
-        -- Kendi ses ayarların
-        pcall(function() 
-          VoiceService.EnableDefaultVoice = true 
-        end)
-        
-        -- Tüm oyuncuları unmute et
-        local unmuted = 0
-        for _, player in ipairs(_b:GetPlayers()) do
-          pcall(function()
-            local speaker = VoiceService:GetSpeaker(player.UserId)
-            if speaker then
-              speaker.IsMuted = false
-              speaker.Volume = 1
-              unmuted = unmuted + 1
-            end
-          end)
-        end
-        
-        _bo("Voice Bypass",unmuted.." oyuncu unmute edildi.","Success")
-      else
-        _bo("Voice Bypass","VoiceChat servisi bulunamadı.","Warning")
-      end
-    end)
-  end
-})
-
-_cX:CreateSlider({
-  Name="Herkesin Ses Seviyesi",
-  Range={0,200},
-  Increment=5,
-  Suffix="%",
-  CurrentValue=100,
-  Flag="GlobalVoiceVolume",
-  Callback=function(_vol)
-    local volume = _vol / 100
-    pcall(function()
-      local VoiceService = game:GetService("VoiceChatService")
-      if VoiceService then
-        for _, player in ipairs(_b:GetPlayers()) do
-          if player ~= _m then
-            pcall(function()
-              local speaker = VoiceService:GetSpeaker(player.UserId)
-              if speaker then
-                speaker.Volume = volume
-              end
-            end)
-          end
-        end
-      end
-    end)
-  end
-})
+_bo("PEKKAN","v10.3 FİNAL - Para basma + Voice bypass + Tüm animasyonlar • Yapımcı: ".._o,"Success")
 
 
--- NEIGHBORS OYUNU ÖZELLİKLERİ (ÇEŞİTLİ SEKMESİNDE)
+-- 🏘️ NEIGHBORS OYUNU - ALDATMA ALETİ
 _cX:CreateSection("🏘️ Neighbors - Aldatma Aleti")
 
--- Karakter Değiştirme (Morph)
-local _morphedTo = nil
 _cX:CreateButton({
-  Name="Hedefe Dönüş (Morph)",
-  Desc="Seçili oyuncunun görünüşüne tamamen dönüş",
-  Style="Primary",
-  Icon="users",
-  Callback=function()
-    local target = _bB.Target
-    if not target then
-      _bo("Morph","Önce bir oyuncu seç (Oyuncular sekmesi).","Warning")
-      return
-    end
-    
-    local targetChar = target.Character
-    if not targetChar then
-      _bo("Morph","Hedefin karakteri bulunamadı.","Warning")
-      return
-    end
-    
-    local myChar = _m.Character
-    if not myChar then
-      _bo("Morph","Senin karakterin bulunamadı.","Warning")
-      return
-    end
-    
-    -- Daha güçlü morph yöntemi
-    pcall(function()
-      -- Yöntem 1: HumanoidDescription
-      local success1 = pcall(function()
-        local desc = game:GetService("Players"):GetHumanoidDescriptionFromUserId(target.UserId)
-        local myHum = myChar:FindFirstChildOfClass("Humanoid")
-        if myHum and desc then
-          myHum:ApplyDescription(desc)
-        end
-      end)
-      
-      -- Yöntem 2: Karakteri klonla (daha güçlü)
-      if not success1 then
-        task.spawn(function()
-          local targetClone = targetChar:Clone()
-          targetClone.Name = _m.Name
-          
-          -- HumanoidRootPart pozisyonunu koru
-          local myHRP = myChar:FindFirstChild("HumanoidRootPart")
-          local cloneHRP = targetClone:FindFirstChild("HumanoidRootPart")
-          
-          if myHRP and cloneHRP then
-            local savedCF = myHRP.CFrame
-            myChar:Destroy()
-            targetClone.Parent = workspace
-            cloneHRP.CFrame = savedCF
-            _m.Character = targetClone
-          end
-        end)
-      end
-      
-      _morphedTo = target.DisplayName
-      _bo("Morph",target.DisplayName.." karakterine dönüştün!","Success")
-    end)
-  end
-})
-
-_cX:CreateButton({
-  Name="Kendi Karakterine Dön",
-  Desc="Normal haline geri dön (respawn)",
-  Icon="refresh-cw",
-  Callback=function()
-    local myChar = _m.Character
-    if myChar then
-      local hum = myChar:FindFirstChildOfClass("Humanoid")
-      if hum then
-        hum.Health = 0
-        task.wait(5)
-        _bo("Morph","Kendi karakterine döndün.","Success")
-      end
-    end
-  end
-})
-
--- Mağaza Bypass (Güçlendirilmiş)
-_cX:CreateSection("💰 Aldatma Aleti - Mağaza")
-
-local _shopBypassActive = false
-local _autoBypassEnabled = false
-
-_cX:CreateToggle({
-  Name="Para Hilesi (Sonsuz Para)",
-  Desc="Sürekli 999,999 para ekler",
-  CurrentValue=false,
-  Flag="NeighborsInfiniteMoney",
-  Callback=function(_enabled)
-    _autoBypassEnabled = _enabled
-    if _enabled then
-      task.spawn(function()
-        while _autoBypassEnabled and task.wait(0.5) do
-          pcall(function()
-            -- Para bulma yöntemleri
-            local leaderstats = _m:FindFirstChild("leaderstats")
-            if leaderstats then
-              for _, stat in ipairs(leaderstats:GetChildren()) do
-                if stat:IsA("IntValue") or stat:IsA("NumberValue") then
-                  if string.find(string.lower(stat.Name), "money") or 
-                     string.find(string.lower(stat.Name), "cash") or 
-                     string.find(string.lower(stat.Name), "para") or
-                     string.find(string.lower(stat.Name), "coin") or
-                     string.find(string.lower(stat.Name), "dollar") then
-                    stat.Value = 999999
-                  end
-                end
-              end
-            end
-            
-            -- PlayerData bypass
-            local playerData = _m:FindFirstChild("Data") or _m:FindFirstChild("PlayerData") or _m:FindFirstChild("PlayerStats")
-            if playerData then
-              for _, value in ipairs(playerData:GetDescendants()) do
-                if value:IsA("IntValue") or value:IsA("NumberValue") then
-                  if string.find(string.lower(value.Name), "money") or 
-                     string.find(string.lower(value.Name), "cash") or
-                     string.find(string.lower(value.Name), "coin") then
-                    value.Value = 999999
-                  end
-                end
-              end
-            end
-          end)
-        end
-      end)
-      _bo("Para Hilesi","Sonsuz para aktif! 999,999 para sürekli ekleniyor.","Success")
-    else
-      _bo("Para Hilesi","Kapatıldı.","Info")
-    end
-  end
-})
-
-_cX:CreateToggle({
-  Name="Fiyat Sıfırlama (Ücretsiz)",
-  Desc="Tüm eşyaların fiyatını 0 yapar",
-  CurrentValue=false,
-  Flag="NeighborsPriceBypass",
-  Callback=function(_enabled)
-    _shopBypassActive = _enabled
-    if _enabled then
-      task.spawn(function()
-        while _shopBypassActive and task.wait(1) do
-          pcall(function()
-            local RS = game:GetService("ReplicatedStorage")
-            
-            -- Tüm olası klasörleri kontrol et
-            for _, folderName in ipairs({"Items", "Shop", "Store", "GameData", "ShopItems", "Products", "Catalog"}) do
-              local folder = RS:FindFirstChild(folderName)
-              if folder then
-                for _, item in ipairs(folder:GetDescendants()) do
-                  if item:IsA("IntValue") or item:IsA("NumberValue") then
-                    local nameLower = string.lower(item.Name)
-                    if string.find(nameLower, "price") or 
-                       string.find(nameLower, "cost") or
-                       string.find(nameLower, "fiyat") or
-                       string.find(nameLower, "value") then
-                      item.Value = 0
-                    end
-                  end
-                  
-                  -- Configuration içindeki fiyatlar
-                  if item:IsA("Configuration") then
-                    local priceValue = item:FindFirstChild("Price") or item:FindFirstChild("Cost")
-                    if priceValue and (priceValue:IsA("IntValue") or priceValue:IsA("NumberValue")) then
-                      priceValue.Value = 0
-                    end
-                  end
-                end
-              end
-            end
-          end)
-        end
-      end)
-      _bo("Fiyat Bypass","Fiyat sıfırlama aktif! Tüm eşyalar ücretsiz.","Success")
-    else
-      _bo("Fiyat Bypass","Kapatıldı.","Info")
-    end
-  end
-})
-
--- Shop bypass için hook
-task.spawn(function()
-  while task.wait(1) do
-    if _shopBypassActive then
-      pcall(function()
-        -- ReplicatedStorage'daki eşyaları kontrol et
-        local ReplicatedStorage = game:GetService("ReplicatedStorage")
-        
-        -- Neighbors oyununda genellikle Items veya Shop klasörü vardır
-        for _, folder in ipairs({"Items", "Shop", "Store", "GameData"}) do
-          local itemFolder = ReplicatedStorage:FindFirstChild(folder)
-          if itemFolder then
-            for _, item in ipairs(itemFolder:GetDescendants()) do
-              -- Fiyat değerlerini sıfırla
-              if item:IsA("IntValue") or item:IsA("NumberValue") then
-                if string.match(string.lower(item.Name), "price") or 
-                   string.match(string.lower(item.Name), "cost") or
-                   string.match(string.lower(item.Name), "fiyat") then
-                  item.Value = 0
-                end
-              end
-            end
-          end
-        end
-        
-        -- Oyuncunun parasını yüksek tut
-        local leaderstats = _m:FindFirstChild("leaderstats")
-        if leaderstats then
-          for _, stat in ipairs(leaderstats:GetChildren()) do
-            if string.match(string.lower(stat.Name), "money") or 
-               string.match(string.lower(stat.Name), "cash") or
-               string.match(string.lower(stat.Name), "para") or
-               string.match(string.lower(stat.Name), "coin") then
-              if stat:IsA("IntValue") or stat:IsA("NumberValue") then
-                stat.Value = 999999
-              end
-            end
-          end
-        end
-      end)
-    end
-  end
-end)
-
-_cX:CreateButton({
-  Name="Tüm Eşyaları Aç",
-  Desc="Mağazadaki tüm eşyaları anında al",
-  Style="Primary",
-  Icon="shopping-bag",
-  Callback=function()
-    pcall(function()
-      local ReplicatedStorage = game:GetService("ReplicatedStorage")
-      local unlocked = 0
-      
-      -- Oyuncunun envanterini bul
-      local playerData = _m:FindFirstChild("Data") or _m:FindFirstChild("PlayerData")
-      
-      if playerData then
-        local inventory = playerData:FindFirstChild("Inventory") or 
-                         playerData:FindFirstChild("OwnedItems") or
-                         playerData:FindFirstChild("Items")
-        
-        if inventory then
-          -- Tüm eşyaları ekle
-          for _, folder in ipairs({"Items", "Shop", "Store"}) do
-            local itemFolder = ReplicatedStorage:FindFirstChild(folder)
-            if itemFolder then
-              for _, item in ipairs(itemFolder:GetChildren()) do
-                local newItem = item:Clone()
-                newItem.Parent = inventory
-                unlocked = unlocked + 1
-              end
-            end
-          end
-        end
-      end
-      
-      if unlocked > 0 then
-        _bo("Mağaza",unlocked.." eşya açıldı!","Success")
-      else
-        _bo("Mağaza","Eşya sistemi bulunamadı. Farklı metod deneyin.","Warning")
-      end
-    end)
-  end
-})
-
-_cX:CreateButton({
-  Name="💰 Hemen Para Ekle",
-  Desc="Anında 999,999 para ekle",
+  Name="💰 Sonsuz Para",
+  Desc="999,999 para ekle",
   Style="Primary",
   Icon="dollar-sign",
   Callback=function()
-    local added = false
+    local success = false
     pcall(function()
+      -- Leaderstats para
       local leaderstats = _m:FindFirstChild("leaderstats")
       if leaderstats then
         for _, stat in ipairs(leaderstats:GetChildren()) do
           if stat:IsA("IntValue") or stat:IsA("NumberValue") then
             stat.Value = 999999
-            added = true
+            success = true
           end
         end
       end
       
-      local playerData = _m:FindFirstChild("Data") or _m:FindFirstChild("PlayerData")
-      if playerData then
-        for _, value in ipairs(playerData:GetDescendants()) do
-          if value:IsA("IntValue") or value:IsA("NumberValue") then
-            if string.find(string.lower(value.Name), "money") or 
-               string.find(string.lower(value.Name), "cash") or
-               string.find(string.lower(value.Name), "coin") then
-              value.Value = 999999
-              added = true
+      -- PlayerData para
+      for _, dataName in ipairs({"Data", "PlayerData", "Stats"}) do
+        local data = _m:FindFirstChild(dataName)
+        if data then
+          for _, val in ipairs(data:GetDescendants()) do
+            if val:IsA("IntValue") or val:IsA("NumberValue") then
+              if string.find(string.lower(val.Name), "money") or 
+                 string.find(string.lower(val.Name), "cash") or 
+                 string.find(string.lower(val.Name), "coin") then
+                val.Value = 999999
+                success = true
+              end
             end
           end
         end
       end
-      
-      if added then
-        _bo("Para","999,999 para eklendi!","Success")
-      else
-        _bo("Para","Para sistemi bulunamadı. Toggle'ı dene.","Warning")
-      end
     end)
+    
+    if success then
+      _bo("Para","999,999 para eklendi!","Success")
+    else
+      _bo("Para","Para sistemi bulunamadı.","Warning")
+    end
   end
 })
 
 _cX:CreateButton({
-  Name="🛍️ Tüm Eşyaları Al (RemoteEvent)",
-  Desc="Sunucuya eşya satın alma isteği gönder",
+  Name="🛍️ Tüm Eşyaları Al",
+  Desc="Mağazadaki eşyaları almayı dene",
   Style="Primary",
-  Icon="shopping-cart",
+  Icon="shopping-bag",
   Callback=function()
-    local unlocked = 0
+    local count = 0
     pcall(function()
       local RS = game:GetService("ReplicatedStorage")
       
       -- RemoteEvent'leri bul
-      local buyRemotes = {}
-      for _, obj in ipairs(RS:GetDescendants()) do
-        if obj:IsA("RemoteEvent") or obj:IsA("RemoteFunction") then
-          local nameLower = string.lower(obj.Name)
-          if string.find(nameLower, "shop") or
-             string.find(nameLower, "buy") or
-             string.find(nameLower, "purchase") or
-             string.find(nameLower, "unlock") or
-             string.find(nameLower, "item") then
-            table.insert(buyRemotes, obj)
-          end
-        end
-      end
-      
-      -- Eşyaları bul ve satın al
-      for _, folderName in ipairs({"Items", "Shop", "Store", "GameData", "ShopItems"}) do
-        local folder = RS:FindFirstChild(folderName)
-        if folder then
-          for _, item in ipairs(folder:GetChildren()) do
-            for _, remote in ipairs(buyRemotes) do
-              pcall(function()
-                if remote:IsA("RemoteEvent") then
-                  remote:FireServer("Buy", item.Name)
-                  remote:FireServer("Purchase", item.Name)
-                  remote:FireServer("Unlock", item.Name)
-                  remote:FireServer(item.Name, 0) -- 0 fiyatla
-                  remote:FireServer({ItemName = item.Name, Price = 0})
-                elseif remote:IsA("RemoteFunction") then
-                  remote:InvokeServer("Buy", item.Name)
-                  remote:InvokeServer("Purchase", item.Name)
+      for _, remote in ipairs(RS:GetDescendants()) do
+        if remote:IsA("RemoteEvent") then
+          if string.find(string.lower(remote.Name), "shop") or
+             string.find(string.lower(remote.Name), "buy") or
+             string.find(string.lower(remote.Name), "purchase") then
+            
+            -- Eşyaları bul
+            for _, folder in ipairs({"Items", "Shop", "Store"}) do
+              local itemFolder = RS:FindFirstChild(folder)
+              if itemFolder then
+                for _, item in ipairs(itemFolder:GetChildren()) do
+                  pcall(function()
+                    remote:FireServer("Buy", item.Name)
+                    remote:FireServer("Purchase", item.Name)
+                    remote:FireServer(item.Name)
+                    count = count + 1
+                  end)
+                  task.wait(0.1)
                 end
-                unlocked = unlocked + 1
-              end)
-              task.wait(0.05)
+              end
             end
           end
         end
       end
+    end)
+    
+    if count > 0 then
+      _bo("Mağaza",count.." istek gönderildi!","Success")
+    else
+      _bo("Mağaza","RemoteEvent bulunamadı.","Warning")
+    end
+  end
+})
+
+_cX:CreateButton({
+  Name="👤 Hedefe Dönüş (Morph)",
+  Desc="Seçili oyuncunun görünüşüne dönüş",
+  Icon="users",
+  Callback=function()
+    local target = _bB.Target
+    if not target then
+      _bo("Morph","Önce bir oyuncu seç.","Warning")
+      return
+    end
+    
+    pcall(function()
+      local char = _m.Character
+      if not char then return end
       
-      _bo("Mağaza",unlocked.." eşya için istek gönderildi!","Success")
+      local desc = game:GetService("Players"):GetHumanoidDescriptionFromUserId(target.UserId)
+      local hum = char:FindFirstChildOfClass("Humanoid")
+      
+      if hum and desc then
+        hum:ApplyDescription(desc)
+        _bo("Morph",target.DisplayName.." karakterine dönüştün!","Success")
+      end
     end)
   end
 })
 
 _cX:CreateButton({
-  Name="🔓 Inventory'ye Direkt Ekle",
-  Desc="Eşyaları doğrudan envanterine ekle",
-  Icon="package",
+  Name="🔄 Karakteri Sıfırla",
+  Desc="Kendi karakterine geri dön",
+  Icon="refresh-cw",
   Callback=function()
-    local added = 0
-    pcall(function()
-      local RS = game:GetService("ReplicatedStorage")
-      
-      -- Oyuncunun inventory'sini bul
-      local inventory = nil
-      local locations = {
-        _m:FindFirstChild("Data"),
-        _m:FindFirstChild("PlayerData"),
-        _m:FindFirstChild("Stats"),
-        _m.Character
-      }
-      
-      for _, loc in ipairs(locations) do
-        if loc then
-          inventory = loc:FindFirstChild("Inventory") or 
-                     loc:FindFirstChild("OwnedItems") or
-                     loc:FindFirstChild("Items") or
-                     loc:FindFirstChild("Backpack")
-          if inventory then break end
-        end
+    local char = _m.Character
+    if char then
+      local hum = char:FindFirstChildOfClass("Humanoid")
+      if hum then
+        hum.Health = 0
+        _bo("Morph","Karakterin sıfırlanıyor...","Info")
       end
-      
-      if not inventory then
-        inventory = _m:FindFirstChild("Backpack")
-      end
-      
-      if inventory then
-        -- Eşyaları ekle
-        for _, folderName in ipairs({"Items", "Shop", "Store", "Tools", "GameData"}) do
-          local folder = RS:FindFirstChild(folderName)
-          if folder then
-            for _, item in ipairs(folder:GetChildren()) do
-              pcall(function()
-                local clone = item:Clone()
-                clone.Parent = inventory
-                added = added + 1
-              end)
-            end
-          end
-        end
-        _bo("Inventory",added.." eşya eklendi!","Success")
-      else
-        _bo("Inventory","Inventory bulunamadı. Diğer metotları dene.","Warning")
-      end
-    end)
-  end
-})
-              end)
-            end
-          end
-        end
-      end
-      
-      _bo("Mağaza Bypass",unlocked.." eşya için işlem gönderildi.","Success")
-    end)
+    end
   end
 })
