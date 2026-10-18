@@ -3141,12 +3141,12 @@ _cX:CreateSlider({
 })
 
 
--- NEIGHBORS OYUNU ÖZELLİKLERİ
-_cV:CreateSection("Neighbors Özel")
+-- NEIGHBORS OYUNU ÖZELLİKLERİ (ÇEŞİTLİ SEKMESİNDE)
+_cX:CreateSection("🏘️ Neighbors Oyunu")
 
 -- Karakter Kopyalama
 local _copiedCharacter = nil
-_cV:CreateButton({
+_cX:CreateButton({
   Name="Hedefin Karakterini Kopyala",
   Desc="Seçili oyuncunun görünüşünü kopyala",
   Style="Primary",
@@ -3188,7 +3188,7 @@ _cV:CreateButton({
   end
 })
 
-_cV:CreateButton({
+_cX:CreateButton({
   Name="Orijinal Karaktere Dön",
   Desc="Kendi karakterine geri dön",
   Icon="rotate-ccw",
@@ -3209,10 +3209,10 @@ _cV:CreateButton({
 })
 
 -- Mağaza Bypass
-_cV:CreateSection("Mağaza Bypass")
+_cX:CreateSection("💰 Mağaza Bypass")
 
 local _shopBypassActive = false
-_cV:CreateToggle({
+_cX:CreateToggle({
   Name="Ücretsiz Mağaza",
   Desc="Mağazadaki tüm eşyaları ücretsiz kullan",
   CurrentValue=false,
@@ -3271,7 +3271,7 @@ task.spawn(function()
   end
 end)
 
-_cV:CreateButton({
+_cX:CreateButton({
   Name="Tüm Eşyaları Aç",
   Desc="Mağazadaki tüm eşyaları anında al",
   Style="Primary",
@@ -3313,7 +3313,7 @@ _cV:CreateButton({
   end
 })
 
-_cV:CreateButton({
+_cX:CreateButton({
   Name="Sonsuz Para",
   Desc="Para miktarını maksimuma çıkar",
   Icon="dollar-sign",
@@ -3351,7 +3351,7 @@ _cV:CreateButton({
 })
 
 -- Gelişmiş eşya bypass
-_cV:CreateButton({
+_cX:CreateButton({
   Name="Tüm Kilitlileri Aç (Gelişmiş)",
   Desc="RemoteEvent ile sunucuya gönder",
   Icon="unlock",
