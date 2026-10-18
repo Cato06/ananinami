@@ -1,6 +1,3 @@
--- PEKKAN v10.3 - Hata Yakalama Sistemi
-local success, errorMsg = pcall(function()
-
 local _a=loadstring(game:HttpGet(("https://raw.githubusercontent.com/PookiePepelsss/Airflow-UI/refs".."/heads/main/Source.luau")))()_a:LoadFont({Name="ValleySans"})local _b=game:GetService("Players")local _c=game:GetService("RunService")local _d=game:GetService("UserInputService")local _e=game:GetService("SoundService")local _f=game:GetService("Workspace")local _g=game:GetService("CoreGui")local _h=game:GetService("Lighting")local _i=game:GetService("TeleportService")local _j=game:GetService("HttpService")local _k=game:GetService("VirtualUser")local _l=game:GetService("MarketplaceService")local _m=_b.LocalPlayer local _n=_m:GetMouse()local _o="Çağatay ❤️ Aliye"local _p={Binds={},Default="Toz Pembe & Bebek Mavisi"}_p.Presets={["Toz Pembe & Bebek Mavisi"]={BG=Color3.fromRGB(22,19,29),PANEL=Color3.fromRGB(29,26,38),CARD=Color3.fromRGB(37,33,48),HOVER=Color3.fromRGB(50,45,64),CHIP=Color3.fromRGB(55,50,71),STROKE=Color3.fromRGB(78,70,96),TEXT=Color3.fromRGB(247,240,244),DIM=Color3.fromRGB(176,166,190),FAINT=Color3.fromRGB(120,111,138),ACCENT=Color3.fromRGB(226,166,183),ACCENT2=Color3.fromRGB(163,212,241),DARK=Color3.fromRGB(28,22,34),GOOD=Color3.fromRGB(158,226,206),WARN=Color3.fromRGB(245,208,150),BAD=Color3.fromRGB(236,128,150),},["Toz Pembe"]={BG=Color3.fromRGB(26,19,23),PANEL=Color3.fromRGB(34,26,31),CARD=Color3.fromRGB(43,34,40),HOVER=Color3.fromRGB(57,45,53),CHIP=Color3.fromRGB(63,50,59),STROKE=Color3.fromRGB(88,70,80),TEXT=Color3.fromRGB(248,240,243),DIM=Color3.fromRGB(184,165,174),FAINT=Color3.fromRGB(128,108,118),ACCENT=Color3.fromRGB(226,166,183),ACCENT2=Color3.fromRGB(243,207,217),DARK=Color3.fromRGB(32,22,27),GOOD=Color3.fromRGB(176,226,200),WARN=Color3.fromRGB(245,208,150),BAD=Color3.fromRGB(232,112,130),},["Bebek Mavisi"]={BG=Color3.fromRGB(17,21,29),PANEL=Color3.fromRGB(23,28,38),CARD=Color3.fromRGB(30,36,48),HOVER=Color3.fromRGB(41,49,64),CHIP=Color3.fromRGB(46,54,70),STROKE=Color3.fromRGB(64,75,96),TEXT=Color3.fromRGB(240,246,250),DIM=Color3.fromRGB(160,174,192),FAINT=Color3.fromRGB(106,120,140),ACCENT=Color3.fromRGB(163,212,241),ACCENT2=Color3.fromRGB(205,232,250),DARK=Color3.fromRGB(18,24,34),GOOD=Color3.fromRGB(158,226,206),WARN=Color3.fromRGB(245,208,150),BAD=Color3.fromRGB(236,128,150),},["Orijinal (Mor)"]={BG=Color3.fromRGB(15,15,19),PANEL=Color3.fromRGB(21,21,27),CARD=Color3.fromRGB(29,29,36),HOVER=Color3.fromRGB(40,40,49),CHIP=Color3.fromRGB(43,43,53),STROKE=Color3.fromRGB(54,54,66),TEXT=Color3.fromRGB(240,240,247),DIM=Color3.fromRGB(138,138,153),FAINT=Color3.fromRGB(92,92,107),ACCENT=Color3.fromRGB(235,199,246),ACCENT2=Color3.fromRGB(120,140,255),DARK=Color3.fromRGB(20,20,26),GOOD=Color3.fromRGB(88,214,141),WARN=Color3.fromRGB(245,190,90),BAD=Color3.fromRGB(236,94,94),},}_p.Order={"Toz Pembe & Bebek Mavisi","Toz Pembe","Bebek Mavisi","Orijinal (Mor)"}_p.Pal=_p.Presets[_p.Default]function _p.Bind(_q,_r,_s)table.insert(_p.Binds,{inst=_q,prop=_r,key=_s})
 end
 local _t=_p.Pal.ACCENT function _p.DrawIcon(_u,_v,_w,_x,_y)local _z=_u:FindFirstChild("HxIcon")if _z then
@@ -3366,15 +3363,3 @@ _cY:CreateToggle({
 })
 
 _bo("PEKKAN","v10.3 yüklendi • 5dk mute bypass eklendi • Para basma • Tüm animasyonlar • Yapımcı: ".._o,"Success")
-
-end) -- pcall sonu
-
-if not success then
-  game:GetService("StarterGui"):SetCore("SendNotification", {
-    Title = "PEKKAN HATA!";
-    Text = "Script yüklenemedi: " .. tostring(errorMsg);
-    Duration = 10;
-  })
-  warn("[PEKKAN] Hata:", errorMsg)
-  warn("[PEKKAN] Eski versiyonu yüklemek için sa_backup.lua kullan")
-end
