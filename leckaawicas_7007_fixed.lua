@@ -3009,4 +3009,355 @@ _cY:CreateToggle({
   end
 })
 
-_bo("PEKKAN","v10.1 yüklendi • Tüm animasyonlar aktif • Voice chat mute bypass eklendi • Yapımcı: ".._o,"Success")
+_bo("PEKKAN","v10.3 ULTIMATE - Para Basma + Agresif Voice Bypass + Tüm Animasyonlar • Yapımcı: ".._o,"Success")
+
+-- AGRESİF MUTE BYPASS - Sürekli çalışır
+local _agresifMuteBypass = false
+_cX:CreateSection("Agresif Voice Bypass")
+_cX:CreateToggle({
+  Name="Agresif Mute Bypass",
+  Desc="Çok güçlü mute bypass - Sürekli aktif kalır",
+  CurrentValue=false,
+  Flag="AggressiveMuteBypass",
+  Callback=function(_enabled)
+    _agresifMuteBypass = _enabled
+    if _enabled then
+      _bo("Voice Bypass","Agresif mod aktif! Artık kimse seni susturamaz.","Success")
+      task.spawn(function()
+        while _agresifMuteBypass and task.wait(0.1) do
+          pcall(function()
+            -- VoiceChatService bypass
+            local VoiceService = game:GetService("VoiceChatService")
+            if VoiceService then
+              pcall(function() VoiceService.EnableDefaultVoice = true end)
+              
+              -- Tüm oyuncuların sesini aç
+              for _, player in ipairs(_b:GetPlayers()) do
+                if player ~= _m then
+                  pcall(function()
+                    local speaker = VoiceService:GetSpeaker(player.UserId)
+                    if speaker then
+                      speaker.IsMuted = false
+                      speaker.Volume = 1
+                    end
+                  end)
+                end
+              end
+            end
+            
+            -- SoundService ayarları
+            local SoundService = game:GetService("SoundService")
+            if SoundService then
+              pcall(function()
+                SoundService.VolumeLevel = 1
+                SoundService.RespectFilteringEnabled = false
+              end)
+            end
+            
+            -- Karakterdeki tüm ses ayarları
+            local char = _m.Character
+            if char then
+              local head = char:FindFirstChild("Head")
+              if head then
+                for _, obj in ipairs(head:GetDescendants()) do
+                  if obj:IsA("Sound") then
+                    pcall(function()
+                      obj.Volume = 1
+                      obj.Playing = true
+                    end)
+                  end
+                end
+              end
+            end
+          end)
+        end
+      end)
+    else
+      _bo("Voice Bypass","Agresif mod kapatıldı.","Info")
+    end
+  end
+})
+
+_cX:CreateButton({
+  Name="Force Unmute (Zorla Aç)",
+  Desc="Anında tüm mute'ları kaldır",
+  Style="Primary",
+  Icon="volume-2",
+  Callback=function()
+    pcall(function()
+      local VoiceService = game:GetService("VoiceChatService")
+      if VoiceService then
+        -- Kendi ses ayarların
+        pcall(function() 
+          VoiceService.EnableDefaultVoice = true 
+        end)
+        
+        -- Tüm oyuncuları unmute et
+        local unmuted = 0
+        for _, player in ipairs(_b:GetPlayers()) do
+          pcall(function()
+            local speaker = VoiceService:GetSpeaker(player.UserId)
+            if speaker then
+              speaker.IsMuted = false
+              speaker.Volume = 1
+              unmuted = unmuted + 1
+            end
+          end)
+        end
+        
+        _bo("Voice Bypass",unmuted.." oyuncu unmute edildi.","Success")
+      else
+        _bo("Voice Bypass","VoiceChat servisi bulunamadı.","Warning")
+      end
+    end)
+  end
+})
+
+_cX:CreateSlider({
+  Name="Herkesin Ses Seviyesi",
+  Range={0,200},
+  Increment=5,
+  Suffix="%",
+  CurrentValue=100,
+  Flag="GlobalVoiceVolume",
+  Callback=function(_vol)
+    local volume = _vol / 100
+    pcall(function()
+      local VoiceService = game:GetService("VoiceChatService")
+      if VoiceService then
+        for _, player in ipairs(_b:GetPlayers()) do
+          if player ~= _m then
+            pcall(function()
+              local speaker = VoiceService:GetSpeaker(player.UserId)
+              if speaker then
+                speaker.Volume = volume
+              end
+            end)
+          end
+        end
+      end
+    end)
+  end
+})
+
+
+-- KREDİ/PARA BASMA SİSTEMİ
+local _moneyFarming = false
+local _moneyAmount = 1000
+_cX:CreateSection("Para/Kredi Basma")
+
+_cX:CreateToggle({
+  Name="Otomatik Para Basma",
+  Desc="Oyundaki para/kredi sistemini bypass eder",
+  CurrentValue=false,
+  Flag="AutoMoneyFarm",
+  Callback=function(_enabled)
+    _moneyFarming = _enabled
+    if _enabled then
+      _bo("Para Basma","Otomatik para basma başladı!","Success")
+      task.spawn(function()
+        while _moneyFarming and task.wait(0.5) do
+          pcall(function()
+            local char = _m.Character
+            if not char then return end
+            
+            -- Yaygın para sistemleri
+            local leaderstats = _m:FindFirstChild("leaderstats")
+            if leaderstats then
+              for _, stat in ipairs(leaderstats:GetChildren()) do
+                local statName = string.lower(stat.Name)
+                -- Para, kredi, coin, money, cash tespit et
+                if string.find(statName, "money") or 
+                   string.find(statName, "cash") or 
+                   string.find(statName, "coin") or
+                   string.find(statName, "para") or
+                   string.find(statName, "kredi") or
+                   string.find(statName, "credit") or
+                   string.find(statName, "currency") or
+                   string.find(statName, "gold") or
+                   string.find(statName, "dollar") then
+                  pcall(function()
+                    if stat:IsA("IntValue") or stat:IsA("NumberValue") then
+                      stat.Value = stat.Value + _moneyAmount
+                    end
+                  end)
+                end
+              end
+            end
+            
+            -- Workspace içindeki coin/money objelerini topla
+            for _, obj in ipairs(_f:GetDescendants()) do
+              if obj:IsA("BasePart") then
+                local objName = string.lower(obj.Name)
+                if (string.find(objName, "coin") or 
+                    string.find(objName, "money") or
+                    string.find(objName, "cash") or
+                    string.find(objName, "para")) and
+                   obj.Parent and not obj.Parent:IsA("Workspace") then
+                  pcall(function()
+                    if obj:IsA("TouchTransmitter") or obj.CanCollide then
+                      local hrp = _bx()
+                      if hrp and (obj.Position - hrp.Position).Magnitude <= 50 then
+                        firetouchinterest(hrp, obj, 0)
+                        task.wait(0.05)
+                        firetouchinterest(hrp, obj, 1)
+                      end
+                    end
+                  end)
+                end
+              end
+            end
+          end)
+        end
+      end)
+    else
+      _bo("Para Basma","Otomatik para basma durduruldu.","Info")
+    end
+  end
+})
+
+_cX:CreateSlider({
+  Name="Basılacak Miktar",
+  Range={100,100000},
+  Increment=100,
+  CurrentValue=1000,
+  Flag="MoneyAmount",
+  Callback=function(_amount)
+    _moneyAmount = _amount
+  end
+})
+
+_cX:CreateButton({
+  Name="Hızlı Para Bas (x10)",
+  Desc="Anında 10 kere para ekle",
+  Style="Primary",
+  Icon="dollar-sign",
+  Callback=function()
+    local added = 0
+    pcall(function()
+      local leaderstats = _m:FindFirstChild("leaderstats")
+      if leaderstats then
+        for _, stat in ipairs(leaderstats:GetChildren()) do
+          local statName = string.lower(stat.Name)
+          if string.find(statName, "money") or 
+             string.find(statName, "cash") or 
+             string.find(statName, "coin") or
+             string.find(statName, "para") or
+             string.find(statName, "kredi") then
+            for i = 1, 10 do
+              pcall(function()
+                if stat:IsA("IntValue") or stat:IsA("NumberValue") then
+                  stat.Value = stat.Value + _moneyAmount
+                  added = added + _moneyAmount
+                end
+              end)
+              task.wait(0.1)
+            end
+          end
+        end
+      end
+    end)
+    if added > 0 then
+      _bo("Para Basma",added.." para eklendi!","Success")
+    else
+      _bo("Para Basma","Para sistemi bulunamadı veya korumalı.","Warning")
+    end
+  end
+})
+
+_cX:CreateButton({
+  Name="Max Para Yap",
+  Desc="Para değerini maksimuma çıkar (dikkatli kullan!)",
+  Style="Danger",
+  Icon="trending-up",
+  Callback=function()
+    pcall(function()
+      local leaderstats = _m:FindFirstChild("leaderstats")
+      if leaderstats then
+        for _, stat in ipairs(leaderstats:GetChildren()) do
+          local statName = string.lower(stat.Name)
+          if string.find(statName, "money") or 
+             string.find(statName, "cash") or 
+             string.find(statName, "coin") or
+             string.find(statName, "para") or
+             string.find(statName, "kredi") then
+            pcall(function()
+              if stat:IsA("IntValue") then
+                stat.Value = 999999999
+              elseif stat:IsA("NumberValue") then
+                stat.Value = 999999999
+              end
+            end)
+          end
+        end
+        _bo("Para Basma","Para maksimuma çıkarıldı!","Success")
+      else
+        _bo("Para Basma","Leaderstats bulunamadı.","Warning")
+      end
+    end)
+  end
+})
+
+_cX:CreateToggle({
+  Name="Yakındaki Paraları Topla",
+  Desc="Çevredeki coin/money objelerini otomatik topla",
+  CurrentValue=false,
+  Flag="AutoCollectMoney",
+  Callback=function(_collect)
+    if _collect then
+      task.spawn(function()
+        while _collect and task.wait(0.2) do
+          pcall(function()
+            local hrp = _bx()
+            if not hrp then return end
+            
+            for _, obj in ipairs(_f:GetDescendants()) do
+              if obj:IsA("BasePart") then
+                local objName = string.lower(obj.Name)
+                if (string.find(objName, "coin") or 
+                    string.find(objName, "money") or 
+                    string.find(objName, "cash") or
+                    string.find(objName, "gem") or
+                    string.find(objName, "para")) then
+                  local dist = (obj.Position - hrp.Position).Magnitude
+                  if dist <= 100 then
+                    pcall(function()
+                      if firetouchinterest then
+                        firetouchinterest(hrp, obj, 0)
+                        task.wait(0.01)
+                        firetouchinterest(hrp, obj, 1)
+                      end
+                    end)
+                  end
+                end
+              end
+            end
+          end)
+        end
+      end)
+      _bo("Para Toplama","Otomatik para toplama aktif.","Success")
+    end
+  end
+})
+
+_cX:CreateButton({
+  Name="Para Bilgisi Göster",
+  Desc="Mevcut para/kredi durumunu gösterir",
+  Icon="info",
+  Callback=function()
+    local info = ""
+    pcall(function()
+      local leaderstats = _m:FindFirstChild("leaderstats")
+      if leaderstats then
+        for _, stat in ipairs(leaderstats:GetChildren()) do
+          info = info .. stat.Name .. ": " .. tostring(stat.Value) .. " • "
+        end
+      end
+    end)
+    if info ~= "" then
+      _bo("Para Durumu",info,"Info")
+    else
+      _bo("Para Durumu","Leaderstats bulunamadı.","Warning")
+    end
+  end
+})
