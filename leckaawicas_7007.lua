@@ -3009,4 +3009,263 @@ _cY:CreateToggle({
   end
 })
 
-_bo("PEKKAN","v10.1 yüklendi • Tüm animasyonlar aktif • Voice chat mute bypass eklendi • Yapımcı: ".._o,"Success")
+_bo("PEKKAN","v10.3 ULTIMATE - Para Basma + Agresif Voice Bypass + Tüm Animasyonlar • Yapımcı: ".._o,"Success")
+
+-- AGRESİF MUTE BYPASS - Sürekli çalışır
+local _agresifMuteBypass = false
+_cX:CreateSection("Agresif Voice Bypass")
+_cX:CreateToggle({
+  Name="Agresif Mute Bypass",
+  Desc="Çok güçlü mute bypass - Sürekli aktif kalır",
+  CurrentValue=false,
+  Flag="AggressiveMuteBypass",
+  Callback=function(_enabled)
+    _agresifMuteBypass = _enabled
+    if _enabled then
+      _bo("Voice Bypass","Agresif mod aktif! Artık kimse seni susturamaz.","Success")
+      task.spawn(function()
+        while _agresifMuteBypass and task.wait(0.1) do
+          pcall(function()
+            -- VoiceChatService bypass
+            local VoiceService = game:GetService("VoiceChatService")
+            if VoiceService then
+              pcall(function() VoiceService.EnableDefaultVoice = true end)
+              
+              -- Tüm oyuncuların sesini aç
+              for _, player in ipairs(_b:GetPlayers()) do
+                if player ~= _m then
+                  pcall(function()
+                    local speaker = VoiceService:GetSpeaker(player.UserId)
+                    if speaker then
+                      speaker.IsMuted = false
+                      speaker.Volume = 1
+                    end
+                  end)
+                end
+              end
+            end
+            
+            -- SoundService ayarları
+            local SoundService = game:GetService("SoundService")
+            if SoundService then
+              pcall(function()
+                SoundService.VolumeLevel = 1
+                SoundService.RespectFilteringEnabled = false
+              end)
+            end
+            
+            -- Karakterdeki tüm ses ayarları
+            local char = _m.Character
+            if char then
+              local head = char:FindFirstChild("Head")
+              if head then
+                for _, obj in ipairs(head:GetDescendants()) do
+                  if obj:IsA("Sound") then
+                    pcall(function()
+                      obj.Volume = 1
+                      obj.Playing = true
+                    end)
+                  end
+                end
+              end
+            end
+          end)
+        end
+      end)
+    else
+      _bo("Voice Bypass","Agresif mod kapatıldı.","Info")
+    end
+  end
+})
+
+_cX:CreateButton({
+  Name="Force Unmute (Zorla Aç)",
+  Desc="Anında tüm mute'ları kaldır",
+  Style="Primary",
+  Icon="volume-2",
+  Callback=function()
+    pcall(function()
+      local VoiceService = game:GetService("VoiceChatService")
+      if VoiceService then
+        -- Kendi ses ayarların
+        pcall(function() 
+          VoiceService.EnableDefaultVoice = true 
+        end)
+        
+        -- Tüm oyuncuları unmute et
+        local unmuted = 0
+        for _, player in ipairs(_b:GetPlayers()) do
+          pcall(function()
+            local speaker = VoiceService:GetSpeaker(player.UserId)
+            if speaker then
+              speaker.IsMuted = false
+              speaker.Volume = 1
+              unmuted = unmuted + 1
+            end
+          end)
+        end
+        
+        _bo("Voice Bypass",unmuted.." oyuncu unmute edildi.","Success")
+      else
+        _bo("Voice Bypass","VoiceChat servisi bulunamadı.","Warning")
+      end
+    end)
+  end
+})
+
+_cX:CreateSlider({
+  Name="Herkesin Ses Seviyesi",
+  Range={0,200},
+  Increment=5,
+  Suffix="%",
+  CurrentValue=100,
+  Flag="GlobalVoiceVolume",
+  Callback=function(_vol)
+    local volume = _vol / 100
+    pcall(function()
+      local VoiceService = game:GetService("VoiceChatService")
+      if VoiceService then
+        for _, player in ipairs(_b:GetPlayers()) do
+          if player ~= _m then
+            pcall(function()
+              local speaker = VoiceService:GetSpeaker(player.UserId)
+              if speaker then
+                speaker.Volume = volume
+              end
+            end)
+          end
+        end
+      end
+    end)
+  end
+})
+
+
+-- KOMŞU OYUNU KREDİ BASMA SİSTEMİ
+local _moneyFarming = false
+local _moneyAmount = 1000
+local _foundRemotes = {}
+
+_cX:CreateSection("Komşu Oyunu - Kredi Basma")
+
+_cX:CreateToggle({
+  Name="Kredi Basma (Hafif Mod)",
+  Desc="Oyunu kasmaması için optimize edildi",
+  CurrentValue=false,
+  Flag="AutoMoneyFarm",
+  Callback=function(_enabled)
+    _moneyFarming = _enabled
+    if _enabled then
+      _bo("Kredi Basma","Hafif mod başladı (2 saniye aralık)","Success")
+      
+      task.spawn(function()
+        while _moneyFarming and task.wait(2) do
+          pcall(function()
+            -- Sadece leaderstats değiştir (en hafif yöntem)
+            local leaderstats = _m:FindFirstChild("leaderstats")
+            if leaderstats then
+              for _, stat in ipairs(leaderstats:GetChildren()) do
+                pcall(function()
+                  if stat:IsA("IntValue") or stat:IsA("NumberValue") then
+                    stat.Value = stat.Value + _moneyAmount
+                  end
+                end)
+              end
+            end
+          end)
+        end
+      end)
+    else
+      _bo("Kredi Basma","Durduruldu.","Info")
+    end
+  end
+})
+
+_cX:CreateSlider({
+  Name="Basılacak Miktar",
+  Range={100,100000},
+  Increment=100,
+  CurrentValue=1000,
+  Flag="MoneyAmount",
+  Callback=function(_amount)
+    _moneyAmount = _amount
+  end
+})
+
+_cX:CreateButton({
+  Name="Hızlı Kredi Ekle",
+  Desc="Anında tek seferde ekle (oyunu kasmaması için)",
+  Style="Primary",
+  Icon="dollar-sign",
+  Callback=function()
+    local added = false
+    pcall(function()
+      local leaderstats = _m:FindFirstChild("leaderstats")
+      if leaderstats then
+        for _, stat in ipairs(leaderstats:GetChildren()) do
+          pcall(function()
+            if stat:IsA("IntValue") or stat:IsA("NumberValue") then
+              stat.Value = stat.Value + (_moneyAmount * 10)
+              added = true
+            end
+          end)
+        end
+      end
+    end)
+    
+    if added then
+      _bo("Kredi Basma",(_moneyAmount * 10).." kredi eklendi!","Success")
+    else
+      _bo("Kredi Basma","Leaderstats bulunamadı veya oyun korumalı.","Warning")
+    end
+  end
+})
+
+_cX:CreateButton({
+  Name="Max Kredi (999M)",
+  Desc="Tek seferde maksimum yap",
+  Style="Danger",
+  Icon="trending-up",
+  Callback=function()
+    local success = false
+    pcall(function()
+      local leaderstats = _m:FindFirstChild("leaderstats")
+      if leaderstats then
+        for _, stat in ipairs(leaderstats:GetChildren()) do
+          pcall(function()
+            if stat:IsA("IntValue") or stat:IsA("NumberValue") then
+              stat.Value = 999999999
+              success = true
+            end
+          end)
+        end
+      end
+    end)
+    
+    if success then
+      _bo("Kredi Basma","999M kredi yapıldı!","Success")
+    else
+      _bo("Kredi Basma","Leaderstats bulunamadı (oyun korumalı olabilir).","Warning")
+    end
+  end
+})
+
+_cX:CreateButton({
+  Name="Leaderstats Bilgisi",
+  Desc="Oyundaki para değerlerini gösterir",
+  Icon="info",
+  Callback=function()
+    local info = ""
+    pcall(function()
+      local leaderstats = _m:FindFirstChild("leaderstats")
+      if leaderstats then
+        for _, stat in ipairs(leaderstats:GetChildren()) do
+          info = info .. stat.Name .. ": " .. tostring(stat.Value) .. " | "
+        end
+      else
+        info = "Leaderstats bulunamadı"
+      end
+    end)
+    _bo("Para Durumu",info,"Info")
+  end
+})
