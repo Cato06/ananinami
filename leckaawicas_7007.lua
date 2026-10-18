@@ -2795,163 +2795,7 @@ end
 end
 })_cV:CreateSlider({Name="Fener parlakl\196\177\196\159\196\177",Range={0.5,6},Increment=0.1,CurrentValue=2.5,Flag="NBLightBright",Callback=function(_Ab)_xU.LightBright=_Ab
 end
-})
-
--- PARA/KREDİ BASMA (Bloxburg ve benzeri oyunlar için)
-_cV:CreateSection("Para / Kredi Basma")
-
-local _moneyAmount = 10000
-local _moneyLoop = false
-
-_cV:CreateInput({
-  Name="Para Miktarı",
-  Desc="Basmak istediğin para/kredi miktarı",
-  PlaceholderText="örn. 50000",
-  MaxLength=15,
-  CurrentValue="10000",
-  Flag="MoneyAmount",
-  Callback=function(_amount)
-    local _num = tonumber(_amount)
-    if _num then
-      _moneyAmount = _num
-    end
-  end
-})
-
-_cV:CreateButton({
-  Name="Para Bas (Tek Seferlik)",
-  Desc="Belirlenen miktarda para/kredi ekler",
-  Style="Primary",
-  Icon="dollar-sign",
-  Callback=function()
-    local success = pcall(function()
-      -- Bloxburg için (Money değeri)
-      local stats = _m:FindFirstChild("leaderstats")
-      if stats then
-        local money = stats:FindFirstChild("Money") or stats:FindFirstChild("money") or 
-                     stats:FindFirstChild("Cash") or stats:FindFirstChild("cash") or
-                     stats:FindFirstChild("Kredi") or stats:FindFirstChild("kredi") or
-                     stats:FindFirstChild("Credits") or stats:FindFirstChild("credits")
-        
-        if money and money:IsA("IntValue") or money:IsA("NumberValue") then
-          money.Value = money.Value + _moneyAmount
-          _bo("Para Basma","✅ ".._moneyAmount.." para eklendi! Toplam: "..money.Value,"Success")
-          return
-        end
-      end
-      
-      -- DataFolder kontrolü
-      local dataFolder = _m:FindFirstChild("DataFolder") or _m:FindFirstChild("Data")
-      if dataFolder then
-        local money = dataFolder:FindFirstChild("Money") or dataFolder:FindFirstChild("Cash") or
-                     dataFolder:FindFirstChild("Coins") or dataFolder:FindFirstChild("Credits")
-        if money then
-          money.Value = money.Value + _moneyAmount
-          _bo("Para Basma","✅ ".._moneyAmount.." para eklendi!","Success")
-          return
-        end
-      end
-      
-      -- PlayerData kontrolü
-      local playerData = _m:FindFirstChild("PlayerData")
-      if playerData then
-        local money = playerData:FindFirstChild("Money") or playerData:FindFirstChild("Cash")
-        if money then
-          money.Value = money.Value + _moneyAmount
-          _bo("Para Basma","✅ ".._moneyAmount.." para eklendi!","Success")
-          return
-        end
-      end
-      
-      -- Hiçbiri bulunamadı
-      _bo("Para Basma","❌ Para sistemi bulunamadı. Bu oyun desteklenmiyor olabilir.","Error")
-    end)
-    
-    if not success then
-      _bo("Para Basma","❌ Hata oluştu. Oyun client-side para koruması kullanıyor olabilir.","Error")
-    end
-  end
-})
-
-_cV:CreateToggle({
-  Name="Otomatik Para Basma",
-  Desc="Her saniye otomatik para ekler (dikkatli kullan!)",
-  CurrentValue=false,
-  Flag="AutoMoney",
-  Callback=function(_enabled)
-    _moneyLoop = _enabled
-    if _enabled then
-      task.spawn(function()
-        while _moneyLoop and task.wait(1) do
-          pcall(function()
-            local stats = _m:FindFirstChild("leaderstats")
-            if stats then
-              local money = stats:FindFirstChild("Money") or stats:FindFirstChild("money") or 
-                           stats:FindFirstChild("Cash") or stats:FindFirstChild("cash") or
-                           stats:FindFirstChild("Kredi") or stats:FindFirstChild("kredi")
-              if money then
-                money.Value = money.Value + _moneyAmount
-              end
-            end
-          end)
-        end
-      end)
-      _bo("Para Basma","⚠️ Otomatik para basma aktif! Her saniye ".._moneyAmount.." ekleniyor.","Warning")
-    else
-      _bo("Para Basma","Otomatik para basma durduruldu.","Info")
-    end
-  end
-})
-
-_cV:CreateButton({
-  Name="Max Para (999,999,999)",
-  Desc="Para değerini maksimuma çıkarır",
-  Style="Danger",
-  Icon="trending-up",
-  Callback=function()
-    pcall(function()
-      local stats = _m:FindFirstChild("leaderstats")
-      if stats then
-        local money = stats:FindFirstChild("Money") or stats:FindFirstChild("money") or 
-                     stats:FindFirstChild("Cash") or stats:FindFirstChild("cash") or
-                     stats:FindFirstChild("Kredi") or stats:FindFirstChild("kredi")
-        if money then
-          money.Value = 999999999
-          _bo("Para Basma","💰 Para maksimuma çıkarıldı: 999,999,999!","Success")
-        else
-          _bo("Para Basma","❌ Para değeri bulunamadı.","Error")
-        end
-      else
-        _bo("Para Basma","❌ Leaderstats bulunamadı.","Error")
-      end
-    end)
-  end
-})
-
-_cV:CreateButton({
-  Name="Mevcut Parayı Göster",
-  Desc="Şu anki para miktarını gösterir",
-  Icon="eye",
-  Callback=function()
-    pcall(function()
-      local stats = _m:FindFirstChild("leaderstats")
-      if stats then
-        local money = stats:FindFirstChild("Money") or stats:FindFirstChild("money") or 
-                     stats:FindFirstChild("Cash") or stats:FindFirstChild("cash") or
-                     stats:FindFirstChild("Kredi") or stats:FindFirstChild("kredi")
-        if money then
-          _bo("Para Bilgisi","💵 Mevcut paranız: "..tostring(money.Value),"Info")
-        else
-          _bo("Para Bilgisi","❌ Para değeri bulunamadı.","Error")
-        end
-      else
-        _bo("Para Bilgisi","❌ Leaderstats bulunamadı.","Error")
-      end
-    end)
-  end
-})
-
-_cV:CreateSection("Bilgi")_cV:CreateButton({Name="Haritay\196\177 tara",Desc="Bulunan etkile\197\159im, e\197\159ya ve NPC say\196\177s\196\177n\196\177 g\195\182sterir",Icon="refresh-cw",Callback=function()_bo("Kom\197\159ular","Etkile\197\159im: ".._zz(_xW).."  \194\183  E\197\159ya/t\196\177klanabilir: ".._zz(_xX).."  \194\183  NPC: ".._zz(_xY),"Info")
+})_cV:CreateSection("Bilgi")_cV:CreateButton({Name="Haritay\196\177 tara",Desc="Bulunan etkile\197\159im, e\197\159ya ve NPC say\196\177s\196\177n\196\177 g\195\182sterir",Icon="refresh-cw",Callback=function()_bo("Kom\197\159ular","Etkile\197\159im: ".._zz(_xW).."  \194\183  E\197\159ya/t\196\177klanabilir: ".._zz(_xX).."  \194\183  NPC: ".._zz(_xY),"Info")
 end
 ,})
 end
@@ -2984,90 +2828,13 @@ _gF()task.defer(_hn)
 end
 )_hn()_ho()_cQ:LoadConfig()
 
--- Voice Chat Mute Bypass Özelliği - GÜÇLENDİRİLMİŞ!
+-- Voice Chat Mute Bypass Özelliği
 local _voiceEnabled = false
 local _originalVolume = 0.5
-local _forceUnmute = false
-local _muteBypassActive = false
-
 _cX:CreateSection("Ses (Voice Chat)")
-
 _cX:CreateToggle({
-  Name="Güçlü Mute Bypass",
-  Desc="5 dakika mute bile olsan konuşabilirsin! (En güçlü mod)",
-  CurrentValue=false,
-  Flag="StrongMuteBypass",
-  Callback=function(_enabled)
-    _muteBypassActive = _enabled
-    if _enabled then
-      task.spawn(function()
-        _bo("Voice Chat","💪 GÜÇLENDİRİLMİŞ MUTE BYPASS AKTİF!","Success")
-        
-        while _muteBypassActive and task.wait(0.1) do -- Her 0.1 saniyede kontrol
-          pcall(function()
-            -- TextChatService kontrolü
-            local TextChatService = game:GetService("TextChatService")
-            if TextChatService then
-              pcall(function()
-                TextChatService.ChatVersion = Enum.ChatVersion.LegacyChatService
-              end)
-            end
-            
-            -- VoiceChatService kontrolü
-            local VoiceChat = game:GetService("VoiceChatService")
-            if VoiceChat then
-              -- Kendi mute durumunu zorla kaldır
-              pcall(function()
-                if VoiceChat:IsVoiceEnabledForUserIdAsync then
-                  local enabled = VoiceChat:IsVoiceEnabledForUserIdAsync(_m.UserId)
-                  if not enabled then
-                    -- Voice'u yeniden aktifleştirmeye çalış
-                    VoiceChat:UseAudio(true)
-                  end
-                end
-              end)
-              
-              -- Kendi mikrofonunu aç
-              pcall(function()
-                local participants = VoiceChat:GetParticipants()
-                for _, participantId in ipairs(participants) do
-                  if participantId == _m.UserId then
-                    local state = VoiceChat:GetParticipantState(participantId)
-                    if state and state.IsMuted then
-                      -- Zorla unmute
-                      VoiceChat:UnmuteParticipant(participantId)
-                    end
-                  end
-                end
-              end)
-            end
-            
-            -- SoundService kontrolü
-            local SoundService = game:GetService("SoundService")
-            pcall(function()
-              if SoundService.VolumeLevel < 0.5 then
-                SoundService.VolumeLevel = 1
-              end
-            end)
-            
-            -- Player kontrolü
-            pcall(function()
-              if _m.VoiceChatState then
-                _m.VoiceChatState = Enum.VoiceChatState.Enabled
-              end
-            end)
-          end)
-        end
-        
-        _bo("Voice Chat","Güçlü mute bypass durduruldu.","Info")
-      end)
-    end
-  end
-})
-
-_cX:CreateToggle({
-  Name="Mute Bypass (Normal)",
-  Desc="Voice chat'te sessize alınsan bile seni duyurur",
+  Name="Mute Bypass (Ses)",
+  Desc="Voice chat'te sessize al\196\177nsan bile seni duyurur",
   CurrentValue=false,
   Flag="VoiceMuteBypass",
   Callback=function(_enabled)
@@ -3079,18 +2846,16 @@ _cX:CreateToggle({
             local VoiceChat = game:GetService("VoiceChatService")
             if VoiceChat then
               -- Mute bypass
-              if VoiceChat:IsVoiceEnabledForUserIdAsync then
-                if VoiceChat:IsVoiceEnabledForUserIdAsync(_m.UserId) then
-                  local players = game:GetService("Players")
-                  for _, player in ipairs(players:GetPlayers()) do
-                    if player ~= _m then
-                      pcall(function()
-                        local speaker = VoiceChat:GetSpeaker(player.UserId)
-                        if speaker then
-                          speaker.IsMuted = false
-                        end
-                      end)
-                    end
+              if VoiceChat:IsVoiceEnabledForUserIdAsync(_m.UserId) then
+                local players = game:GetService("Players")
+                for _, player in ipairs(players:GetPlayers()) do
+                  if player ~= _m then
+                    pcall(function()
+                      local speaker = VoiceChat:GetSpeaker(player.UserId)
+                      if speaker then
+                        speaker.IsMuted = false
+                      end
+                    end)
                   end
                 end
               end
@@ -3098,128 +2863,10 @@ _cX:CreateToggle({
           end)
         end
       end)
-      _bo("Voice Chat","Mute bypass aktif. Seni sessize alsalar bile duyulacaksın.","Success")
+      _bo("Voice Chat","Mute bypass aktif. Seni sessize alsalar bile duyulacaks\196\177n.","Success")
     else
-      _bo("Voice Chat","Mute bypass kapalı.","Info")
+      _bo("Voice Chat","Mute bypass kapal\196\177.","Info")
     end
-  end
-})
-
-_cX:CreateButton({
-  Name="Mute'u Anında Kaldır (Force Unmute)",
-  Desc="5 dakika mute yediysen bunu kullan!",
-  Style="Primary",
-  Icon="mic",
-  Callback=function()
-    local success = false
-    
-    -- Yöntem 1: VoiceChatService
-    pcall(function()
-      local VoiceChat = game:GetService("VoiceChatService")
-      if VoiceChat then
-        pcall(function()
-          local participants = VoiceChat:GetParticipants()
-          for _, participantId in ipairs(participants) do
-            if participantId == _m.UserId then
-              VoiceChat:UnmuteParticipant(participantId)
-              success = true
-            end
-          end
-        end)
-        
-        -- UseAudio metodunu çağır
-        pcall(function()
-          VoiceChat:UseAudio(true)
-          success = true
-        end)
-      end
-    end)
-    
-    -- Yöntem 2: Player state değiştir
-    pcall(function()
-      if _m.VoiceChatState then
-        _m.VoiceChatState = Enum.VoiceChatState.Enabled
-        success = true
-      end
-    end)
-    
-    -- Yöntem 3: Character kontrolü
-    pcall(function()
-      local char = _m.Character
-      if char then
-        local head = char:FindFirstChild("Head")
-        if head then
-          -- Voice related instance'ları kontrol et
-          for _, child in ipairs(head:GetChildren()) do
-            if child:IsA("Sound") and string.find(child.Name:lower(), "voice") then
-              child.Volume = 1
-              child.Playing = true
-              success = true
-            end
-          end
-        end
-      end
-    end)
-    
-    -- Yöntem 4: ReplicatedStorage kontrolü
-    pcall(function()
-      local RS = game:GetService("ReplicatedStorage")
-      local voiceEvents = RS:FindFirstChild("VoiceChatEvents")
-      if voiceEvents then
-        local unmuteEvent = voiceEvents:FindFirstChild("UnmutePlayer")
-        if unmuteEvent and unmuteEvent:IsA("RemoteEvent") then
-          unmuteEvent:FireServer()
-          success = true
-        end
-      end
-    end)
-    
-    if success then
-      _bo("Voice Chat","✅ Mute kaldırma denemesi yapıldı! Konuşmayı dene.","Success")
-      
-      -- Arka planda sürekli kontrol et
-      task.spawn(function()
-        for i = 1, 30 do -- 30 saniye boyunca
-          task.wait(1)
-          pcall(function()
-            local VoiceChat = game:GetService("VoiceChatService")
-            if VoiceChat then
-              VoiceChat:UseAudio(true)
-            end
-          end)
-        end
-      end)
-    else
-      _bo("Voice Chat","⚠️ Mute kaldırılamadı. 'Güçlü Mute Bypass' toggle'ını dene!","Warning")
-    end
-  end
-})
-
-_cX:CreateButton({
-  Name="Voice Chat'i Yeniden Başlat",
-  Desc="Ses sisteminini tamamen resetler",
-  Icon="refresh-cw",
-  Callback=function()
-    pcall(function()
-      -- Ses servisini resetle
-      local SoundService = game:GetService("SoundService")
-      local oldVolume = SoundService.VolumeLevel
-      SoundService.VolumeLevel = 0
-      task.wait(0.5)
-      SoundService.VolumeLevel = oldVolume
-      
-      -- Voice chat'i resetle
-      local VoiceChat = game:GetService("VoiceChatService")
-      if VoiceChat then
-        pcall(function()
-          VoiceChat:UseAudio(false)
-          task.wait(0.5)
-          VoiceChat:UseAudio(true)
-        end)
-      end
-      
-      _bo("Voice Chat","🔄 Voice chat yeniden başlatıldı!","Success")
-    end)
   end
 })
 
@@ -3362,4 +3009,4 @@ _cY:CreateToggle({
   end
 })
 
-_bo("PEKKAN","v10.3 FİNAL - Para basma + Voice bypass + Tüm animasyonlar • Yapımcı: ".._o,"Success")
+_bo("PEKKAN","v10.1 yüklendi • Tüm animasyonlar aktif • Voice chat mute bypass eklendi • Yapımcı: ".._o,"Success")
