@@ -3142,87 +3142,188 @@ _cX:CreateSlider({
 
 
 -- NEIGHBORS OYUNU ÖZELLİKLERİ (ÇEŞİTLİ SEKMESİNDE)
-_cX:CreateSection("🏘️ Neighbors Oyunu")
+_cX:CreateSection("🏘️ Neighbors - Aldatma Aleti")
 
--- Karakter Kopyalama
-local _copiedCharacter = nil
+-- Karakter Değiştirme (Morph)
+local _morphedTo = nil
 _cX:CreateButton({
-  Name="Hedefin Karakterini Kopyala",
-  Desc="Seçili oyuncunun görünüşünü kopyala",
+  Name="Hedefe Dönüş (Morph)",
+  Desc="Seçili oyuncunun görünüşüne tamamen dönüş",
   Style="Primary",
-  Icon="user",
+  Icon="users",
   Callback=function()
     local target = _bB.Target
     if not target then
-      _bo("Karakter Kopyala","Önce bir oyuncu seç (Oyuncular sekmesi).","Warning")
+      _bo("Morph","Önce bir oyuncu seç (Oyuncular sekmesi).","Warning")
       return
     end
     
     local targetChar = target.Character
     if not targetChar then
-      _bo("Karakter Kopyala","Hedefin karakteri bulunamadı.","Warning")
+      _bo("Morph","Hedefin karakteri bulunamadı.","Warning")
       return
     end
     
     local myChar = _m.Character
     if not myChar then
-      _bo("Karakter Kopyala","Senin karakterin bulunamadı.","Warning")
+      _bo("Morph","Senin karakterin bulunamadı.","Warning")
       return
     end
     
-    -- Karakteri kopyala
+    -- Daha güçlü morph yöntemi
     pcall(function()
-      -- Kıyafetleri kopyala
-      local humanoidDesc = game:GetService("Players"):GetHumanoidDescriptionFromUserId(target.UserId)
-      local myHumanoid = myChar:FindFirstChildOfClass("Humanoid")
+      -- Yöntem 1: HumanoidDescription
+      local success1 = pcall(function()
+        local desc = game:GetService("Players"):GetHumanoidDescriptionFromUserId(target.UserId)
+        local myHum = myChar:FindFirstChildOfClass("Humanoid")
+        if myHum and desc then
+          myHum:ApplyDescription(desc)
+        end
+      end)
       
-      if myHumanoid and humanoidDesc then
-        myHumanoid:ApplyDescription(humanoidDesc)
-        _copiedCharacter = {
-          userId = target.UserId,
-          displayName = target.DisplayName
-        }
-        _bo("Karakter Kopyala",target.DisplayName.." karakteri kopyalandı!","Success")
+      -- Yöntem 2: Karakteri klonla (daha güçlü)
+      if not success1 then
+        task.spawn(function()
+          local targetClone = targetChar:Clone()
+          targetClone.Name = _m.Name
+          
+          -- HumanoidRootPart pozisyonunu koru
+          local myHRP = myChar:FindFirstChild("HumanoidRootPart")
+          local cloneHRP = targetClone:FindFirstChild("HumanoidRootPart")
+          
+          if myHRP and cloneHRP then
+            local savedCF = myHRP.CFrame
+            myChar:Destroy()
+            targetClone.Parent = workspace
+            cloneHRP.CFrame = savedCF
+            _m.Character = targetClone
+          end
+        end)
       end
+      
+      _morphedTo = target.DisplayName
+      _bo("Morph",target.DisplayName.." karakterine dönüştün!","Success")
     end)
   end
 })
 
 _cX:CreateButton({
-  Name="Orijinal Karaktere Dön",
-  Desc="Kendi karakterine geri dön",
-  Icon="rotate-ccw",
+  Name="Kendi Karakterine Dön",
+  Desc="Normal haline geri dön (respawn)",
+  Icon="refresh-cw",
   Callback=function()
     local myChar = _m.Character
-    if not myChar then return end
-    
-    pcall(function()
-      local humanoidDesc = game:GetService("Players"):GetHumanoidDescriptionFromUserId(_m.UserId)
-      local myHumanoid = myChar:FindFirstChildOfClass("Humanoid")
-      
-      if myHumanoid and humanoidDesc then
-        myHumanoid:ApplyDescription(humanoidDesc)
-        _bo("Karakter","Orijinal karaktere dönüldü.","Success")
+    if myChar then
+      local hum = myChar:FindFirstChildOfClass("Humanoid")
+      if hum then
+        hum.Health = 0
+        task.wait(5)
+        _bo("Morph","Kendi karakterine döndün.","Success")
       end
-    end)
+    end
   end
 })
 
--- Mağaza Bypass
-_cX:CreateSection("💰 Mağaza Bypass")
+-- Mağaza Bypass (Güçlendirilmiş)
+_cX:CreateSection("💰 Aldatma Aleti - Mağaza")
 
 local _shopBypassActive = false
+local _autoBypassEnabled = false
+
 _cX:CreateToggle({
-  Name="Ücretsiz Mağaza",
-  Desc="Mağazadaki tüm eşyaları ücretsiz kullan",
+  Name="Para Hilesi (Sonsuz Para)",
+  Desc="Sürekli 999,999 para ekler",
   CurrentValue=false,
-  Flag="NeighborsShopBypass",
+  Flag="NeighborsInfiniteMoney",
+  Callback=function(_enabled)
+    _autoBypassEnabled = _enabled
+    if _enabled then
+      task.spawn(function()
+        while _autoBypassEnabled and task.wait(0.5) do
+          pcall(function()
+            -- Para bulma yöntemleri
+            local leaderstats = _m:FindFirstChild("leaderstats")
+            if leaderstats then
+              for _, stat in ipairs(leaderstats:GetChildren()) do
+                if stat:IsA("IntValue") or stat:IsA("NumberValue") then
+                  if string.find(string.lower(stat.Name), "money") or 
+                     string.find(string.lower(stat.Name), "cash") or 
+                     string.find(string.lower(stat.Name), "para") or
+                     string.find(string.lower(stat.Name), "coin") or
+                     string.find(string.lower(stat.Name), "dollar") then
+                    stat.Value = 999999
+                  end
+                end
+              end
+            end
+            
+            -- PlayerData bypass
+            local playerData = _m:FindFirstChild("Data") or _m:FindFirstChild("PlayerData") or _m:FindFirstChild("PlayerStats")
+            if playerData then
+              for _, value in ipairs(playerData:GetDescendants()) do
+                if value:IsA("IntValue") or value:IsA("NumberValue") then
+                  if string.find(string.lower(value.Name), "money") or 
+                     string.find(string.lower(value.Name), "cash") or
+                     string.find(string.lower(value.Name), "coin") then
+                    value.Value = 999999
+                  end
+                end
+              end
+            end
+          end)
+        end
+      end)
+      _bo("Para Hilesi","Sonsuz para aktif! 999,999 para sürekli ekleniyor.","Success")
+    else
+      _bo("Para Hilesi","Kapatıldı.","Info")
+    end
+  end
+})
+
+_cX:CreateToggle({
+  Name="Fiyat Sıfırlama (Ücretsiz)",
+  Desc="Tüm eşyaların fiyatını 0 yapar",
+  CurrentValue=false,
+  Flag="NeighborsPriceBypass",
   Callback=function(_enabled)
     _shopBypassActive = _enabled
     if _enabled then
-      _bo("Mağaza Bypass","Ücretsiz mağaza aktif! Tüm eşyalar ücretsiz.","Success")
+      task.spawn(function()
+        while _shopBypassActive and task.wait(1) do
+          pcall(function()
+            local RS = game:GetService("ReplicatedStorage")
+            
+            -- Tüm olası klasörleri kontrol et
+            for _, folderName in ipairs({"Items", "Shop", "Store", "GameData", "ShopItems", "Products", "Catalog"}) do
+              local folder = RS:FindFirstChild(folderName)
+              if folder then
+                for _, item in ipairs(folder:GetDescendants()) do
+                  if item:IsA("IntValue") or item:IsA("NumberValue") then
+                    local nameLower = string.lower(item.Name)
+                    if string.find(nameLower, "price") or 
+                       string.find(nameLower, "cost") or
+                       string.find(nameLower, "fiyat") or
+                       string.find(nameLower, "value") then
+                      item.Value = 0
+                    end
+                  end
+                  
+                  -- Configuration içindeki fiyatlar
+                  if item:IsA("Configuration") then
+                    local priceValue = item:FindFirstChild("Price") or item:FindFirstChild("Cost")
+                    if priceValue and (priceValue:IsA("IntValue") or priceValue:IsA("NumberValue")) then
+                      priceValue.Value = 0
+                    end
+                  end
+                end
+              end
+            end
+          end)
+        end
+      end)
+      _bo("Fiyat Bypass","Fiyat sıfırlama aktif! Tüm eşyalar ücretsiz.","Success")
     else
-      _bo("Mağaza Bypass","Kapatıldı.","Info")
+      _bo("Fiyat Bypass","Kapatıldı.","Info")
     end
   end
 })
@@ -3314,83 +3415,154 @@ _cX:CreateButton({
 })
 
 _cX:CreateButton({
-  Name="Sonsuz Para",
-  Desc="Para miktarını maksimuma çıkar",
+  Name="💰 Hemen Para Ekle",
+  Desc="Anında 999,999 para ekle",
+  Style="Primary",
   Icon="dollar-sign",
   Callback=function()
+    local added = false
     pcall(function()
       local leaderstats = _m:FindFirstChild("leaderstats")
       if leaderstats then
         for _, stat in ipairs(leaderstats:GetChildren()) do
           if stat:IsA("IntValue") or stat:IsA("NumberValue") then
             stat.Value = 999999
+            added = true
           end
         end
-        _bo("Para","Sonsuz para eklendi!","Success")
-      else
-        -- Alternatif metod
-        local playerData = _m:FindFirstChild("Data") or _m:FindFirstChild("PlayerData")
-        if playerData then
-          for _, value in ipairs(playerData:GetChildren()) do
-            if value:IsA("IntValue") or value:IsA("NumberValue") then
-              if string.match(string.lower(value.Name), "money") or 
-                 string.match(string.lower(value.Name), "cash") or
-                 string.match(string.lower(value.Name), "para") or
-                 string.match(string.lower(value.Name), "coin") then
-                value.Value = 999999
-              end
+      end
+      
+      local playerData = _m:FindFirstChild("Data") or _m:FindFirstChild("PlayerData")
+      if playerData then
+        for _, value in ipairs(playerData:GetDescendants()) do
+          if value:IsA("IntValue") or value:IsA("NumberValue") then
+            if string.find(string.lower(value.Name), "money") or 
+               string.find(string.lower(value.Name), "cash") or
+               string.find(string.lower(value.Name), "coin") then
+              value.Value = 999999
+              added = true
             end
           end
-          _bo("Para","Para eklendi!","Success")
-        else
-          _bo("Para","Para sistemi bulunamadı.","Warning")
         end
+      end
+      
+      if added then
+        _bo("Para","999,999 para eklendi!","Success")
+      else
+        _bo("Para","Para sistemi bulunamadı. Toggle'ı dene.","Warning")
       end
     end)
   end
 })
 
--- Gelişmiş eşya bypass
 _cX:CreateButton({
-  Name="Tüm Kilitlileri Aç (Gelişmiş)",
-  Desc="RemoteEvent ile sunucuya gönder",
-  Icon="unlock",
+  Name="🛍️ Tüm Eşyaları Al (RemoteEvent)",
+  Desc="Sunucuya eşya satın alma isteği gönder",
+  Style="Primary",
+  Icon="shopping-cart",
   Callback=function()
+    local unlocked = 0
     pcall(function()
-      local ReplicatedStorage = game:GetService("ReplicatedStorage")
-      local unlocked = 0
+      local RS = game:GetService("ReplicatedStorage")
       
-      -- RemoteEvent bul
-      local remotes = {}
-      for _, obj in ipairs(ReplicatedStorage:GetDescendants()) do
+      -- RemoteEvent'leri bul
+      local buyRemotes = {}
+      for _, obj in ipairs(RS:GetDescendants()) do
         if obj:IsA("RemoteEvent") or obj:IsA("RemoteFunction") then
-          if string.match(string.lower(obj.Name), "shop") or
-             string.match(string.lower(obj.Name), "buy") or
-             string.match(string.lower(obj.Name), "purchase") or
-             string.match(string.lower(obj.Name), "unlock") then
-            table.insert(remotes, obj)
+          local nameLower = string.lower(obj.Name)
+          if string.find(nameLower, "shop") or
+             string.find(nameLower, "buy") or
+             string.find(nameLower, "purchase") or
+             string.find(nameLower, "unlock") or
+             string.find(nameLower, "item") then
+            table.insert(buyRemotes, obj)
           end
         end
       end
       
-      -- Tüm eşyaları almayı dene
-      for _, folder in ipairs({"Items", "Shop", "Store", "GameData"}) do
-        local itemFolder = ReplicatedStorage:FindFirstChild(folder)
-        if itemFolder then
-          for _, item in ipairs(itemFolder:GetChildren()) do
-            for _, remote in ipairs(remotes) do
+      -- Eşyaları bul ve satın al
+      for _, folderName in ipairs({"Items", "Shop", "Store", "GameData", "ShopItems"}) do
+        local folder = RS:FindFirstChild(folderName)
+        if folder then
+          for _, item in ipairs(folder:GetChildren()) do
+            for _, remote in ipairs(buyRemotes) do
               pcall(function()
                 if remote:IsA("RemoteEvent") then
                   remote:FireServer("Buy", item.Name)
                   remote:FireServer("Purchase", item.Name)
                   remote:FireServer("Unlock", item.Name)
-                  remote:FireServer(item.Name)
+                  remote:FireServer(item.Name, 0) -- 0 fiyatla
+                  remote:FireServer({ItemName = item.Name, Price = 0})
                 elseif remote:IsA("RemoteFunction") then
                   remote:InvokeServer("Buy", item.Name)
                   remote:InvokeServer("Purchase", item.Name)
-                  remote:InvokeServer("Unlock", item.Name)
                 end
                 unlocked = unlocked + 1
+              end)
+              task.wait(0.05)
+            end
+          end
+        end
+      end
+      
+      _bo("Mağaza",unlocked.." eşya için istek gönderildi!","Success")
+    end)
+  end
+})
+
+_cX:CreateButton({
+  Name="🔓 Inventory'ye Direkt Ekle",
+  Desc="Eşyaları doğrudan envanterine ekle",
+  Icon="package",
+  Callback=function()
+    local added = 0
+    pcall(function()
+      local RS = game:GetService("ReplicatedStorage")
+      
+      -- Oyuncunun inventory'sini bul
+      local inventory = nil
+      local locations = {
+        _m:FindFirstChild("Data"),
+        _m:FindFirstChild("PlayerData"),
+        _m:FindFirstChild("Stats"),
+        _m.Character
+      }
+      
+      for _, loc in ipairs(locations) do
+        if loc then
+          inventory = loc:FindFirstChild("Inventory") or 
+                     loc:FindFirstChild("OwnedItems") or
+                     loc:FindFirstChild("Items") or
+                     loc:FindFirstChild("Backpack")
+          if inventory then break end
+        end
+      end
+      
+      if not inventory then
+        inventory = _m:FindFirstChild("Backpack")
+      end
+      
+      if inventory then
+        -- Eşyaları ekle
+        for _, folderName in ipairs({"Items", "Shop", "Store", "Tools", "GameData"}) do
+          local folder = RS:FindFirstChild(folderName)
+          if folder then
+            for _, item in ipairs(folder:GetChildren()) do
+              pcall(function()
+                local clone = item:Clone()
+                clone.Parent = inventory
+                added = added + 1
+              end)
+            end
+          end
+        end
+        _bo("Inventory",added.." eşya eklendi!","Success")
+      else
+        _bo("Inventory","Inventory bulunamadı. Diğer metotları dene.","Warning")
+      end
+    end)
+  end
+})
               end)
             end
           end
