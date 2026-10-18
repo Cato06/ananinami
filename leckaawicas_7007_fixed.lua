@@ -3141,41 +3141,57 @@ _cX:CreateSlider({
 })
 
 
--- KREDİ/PARA BASMA SİSTEMİ
+-- KOMŞU OYUNU KREDİ BASMA SİSTEMİ
 local _moneyFarming = false
 local _moneyAmount = 1000
-_cX:CreateSection("Para/Kredi Basma")
+local _foundRemotes = {}
+
+_cX:CreateSection("Komşu Oyunu - Kredi Basma")
 
 _cX:CreateToggle({
-  Name="Otomatik Para Basma",
-  Desc="Oyundaki para/kredi sistemini bypass eder",
+  Name="Otomatik Kredi Basma",
+  Desc="Komşu oyununda Minutes/kredi basar (RemoteEvent bypass)",
   CurrentValue=false,
   Flag="AutoMoneyFarm",
   Callback=function(_enabled)
     _moneyFarming = _enabled
     if _enabled then
-      _bo("Para Basma","Otomatik para basma başladı!","Success")
+      _bo("Kredi Basma","Komşu oyunu kredi basma başladı!","Success")
+      
       task.spawn(function()
-        while _moneyFarming and task.wait(0.5) do
+        -- RemoteEvent/Function'ları bul
+        local ReplicatedStorage = game:GetService("ReplicatedStorage")
+        
+        for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
+          if remote:IsA("RemoteEvent") or remote:IsA("RemoteFunction") then
+            local name = string.lower(remote.Name)
+            if string.find(name, "money") or 
+               string.find(name, "cash") or 
+               string.find(name, "credit") or
+               string.find(name, "kredi") or
+               string.find(name, "coin") or
+               string.find(name, "currency") or
+               string.find(name, "reward") or
+               string.find(name, "claim") or
+               string.find(name, "give") or
+               string.find(name, "add") then
+              table.insert(_foundRemotes, remote)
+            end
+          end
+        end
+        
+        while _moneyFarming and task.wait(0.3) do
           pcall(function()
-            local char = _m.Character
-            if not char then return end
-            
-            -- Yaygın para sistemleri
+            -- 1. Leaderstats değerini direkt değiştir
             local leaderstats = _m:FindFirstChild("leaderstats")
             if leaderstats then
               for _, stat in ipairs(leaderstats:GetChildren()) do
                 local statName = string.lower(stat.Name)
-                -- Para, kredi, coin, money, cash tespit et
-                if string.find(statName, "money") or 
+                if string.find(statName, "minute") or 
+                   string.find(statName, "money") or 
                    string.find(statName, "cash") or 
-                   string.find(statName, "coin") or
-                   string.find(statName, "para") or
                    string.find(statName, "kredi") or
-                   string.find(statName, "credit") or
-                   string.find(statName, "currency") or
-                   string.find(statName, "gold") or
-                   string.find(statName, "dollar") then
+                   string.find(statName, "credit") then
                   pcall(function()
                     if stat:IsA("IntValue") or stat:IsA("NumberValue") then
                       stat.Value = stat.Value + _moneyAmount
@@ -3185,25 +3201,43 @@ _cX:CreateToggle({
               end
             end
             
-            -- Workspace içindeki coin/money objelerini topla
-            for _, obj in ipairs(_f:GetDescendants()) do
-              if obj:IsA("BasePart") then
-                local objName = string.lower(obj.Name)
-                if (string.find(objName, "coin") or 
-                    string.find(objName, "money") or
-                    string.find(objName, "cash") or
-                    string.find(objName, "para")) and
-                   obj.Parent and not obj.Parent:IsA("Workspace") then
-                  pcall(function()
-                    if obj:IsA("TouchTransmitter") or obj.CanCollide then
-                      local hrp = _bx()
-                      if hrp and (obj.Position - hrp.Position).Magnitude <= 50 then
+            -- 2. RemoteEvent'leri tetikle
+            for _, remote in ipairs(_foundRemotes) do
+              if remote and remote.Parent then
+                pcall(function()
+                  if remote:IsA("RemoteEvent") then
+                    remote:FireServer(_moneyAmount)
+                    remote:FireServer("AddMoney", _moneyAmount)
+                    remote:FireServer("GiveMoney", _moneyAmount)
+                    remote:FireServer({Amount = _moneyAmount})
+                  elseif remote:IsA("RemoteFunction") then
+                    remote:InvokeServer(_moneyAmount)
+                    remote:InvokeServer("AddMoney", _moneyAmount)
+                  end
+                end)
+              end
+            end
+            
+            -- 3. Workspace'deki tüm para/coin objelerini topla
+            local hrp = _bx()
+            if hrp and firetouchinterest then
+              for _, obj in ipairs(_f:GetDescendants()) do
+                if obj:IsA("BasePart") and obj.Parent then
+                  local objName = string.lower(obj.Name)
+                  if (string.find(objName, "coin") or 
+                      string.find(objName, "money") or 
+                      string.find(objName, "cash") or
+                      string.find(objName, "collect") or
+                      string.find(objName, "pickup")) then
+                    local dist = (obj.Position - hrp.Position).Magnitude
+                    if dist <= 150 then
+                      pcall(function()
                         firetouchinterest(hrp, obj, 0)
-                        task.wait(0.05)
+                        task.wait(0.01)
                         firetouchinterest(hrp, obj, 1)
-                      end
+                      end)
                     end
-                  end)
+                  end
                 end
               end
             end
@@ -3211,7 +3245,7 @@ _cX:CreateToggle({
         end
       end)
     else
-      _bo("Para Basma","Otomatik para basma durduruldu.","Info")
+      _bo("Kredi Basma","Otomatik kredi basma durduruldu.","Info")
     end
   end
 })
@@ -3228,22 +3262,25 @@ _cX:CreateSlider({
 })
 
 _cX:CreateButton({
-  Name="Hızlı Para Bas (x10)",
-  Desc="Anında 10 kere para ekle",
+  Name="Hızlı Kredi Bas (x10)",
+  Desc="Anında 10 kere kredi ekle + RemoteEvent tetikle",
   Style="Primary",
   Icon="dollar-sign",
   Callback=function()
     local added = 0
+    
+    -- 1. Leaderstats direkt değiştir
     pcall(function()
       local leaderstats = _m:FindFirstChild("leaderstats")
       if leaderstats then
         for _, stat in ipairs(leaderstats:GetChildren()) do
           local statName = string.lower(stat.Name)
-          if string.find(statName, "money") or 
+          if string.find(statName, "minute") or
+             string.find(statName, "money") or 
              string.find(statName, "cash") or 
              string.find(statName, "coin") or
-             string.find(statName, "para") or
-             string.find(statName, "kredi") then
+             string.find(statName, "kredi") or
+             string.find(statName, "credit") then
             for i = 1, 10 do
               pcall(function()
                 if stat:IsA("IntValue") or stat:IsA("NumberValue") then
@@ -3251,50 +3288,87 @@ _cX:CreateButton({
                   added = added + _moneyAmount
                 end
               end)
-              task.wait(0.1)
+              task.wait(0.05)
             end
           end
         end
       end
     end)
+    
+    -- 2. Tüm RemoteEvent'leri ateşle
+    pcall(function()
+      local ReplicatedStorage = game:GetService("ReplicatedStorage")
+      for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
+        if remote:IsA("RemoteEvent") then
+          pcall(function()
+            for i = 1, 10 do
+              remote:FireServer(_moneyAmount * 10)
+              remote:FireServer("AddMoney", _moneyAmount * 10)
+              remote:FireServer({Amount = _moneyAmount * 10, Type = "Money"})
+              task.wait(0.05)
+            end
+          end)
+        end
+      end
+    end)
+    
     if added > 0 then
-      _bo("Para Basma",added.." para eklendi!","Success")
+      _bo("Kredi Basma",added.." kredi eklendi + RemoteEvent'ler tetiklendi!","Success")
     else
-      _bo("Para Basma","Para sistemi bulunamadı veya korumalı.","Warning")
+      _bo("Kredi Basma","RemoteEvent'ler tetiklendi (leaderstats bulunamadı)","Info")
     end
   end
 })
 
 _cX:CreateButton({
-  Name="Max Para Yap",
-  Desc="Para değerini maksimuma çıkar (dikkatli kullan!)",
+  Name="Max Kredi Yap",
+  Desc="Kredi/Minutes değerini maksimuma çıkar (999M)",
   Style="Danger",
   Icon="trending-up",
   Callback=function()
+    local success = false
     pcall(function()
       local leaderstats = _m:FindFirstChild("leaderstats")
       if leaderstats then
         for _, stat in ipairs(leaderstats:GetChildren()) do
           local statName = string.lower(stat.Name)
-          if string.find(statName, "money") or 
+          if string.find(statName, "minute") or
+             string.find(statName, "money") or 
              string.find(statName, "cash") or 
              string.find(statName, "coin") or
-             string.find(statName, "para") or
-             string.find(statName, "kredi") then
+             string.find(statName, "kredi") or
+             string.find(statName, "credit") then
             pcall(function()
               if stat:IsA("IntValue") then
                 stat.Value = 999999999
+                success = true
               elseif stat:IsA("NumberValue") then
                 stat.Value = 999999999
+                success = true
               end
             end)
           end
         end
-        _bo("Para Basma","Para maksimuma çıkarıldı!","Success")
-      else
-        _bo("Para Basma","Leaderstats bulunamadı.","Warning")
       end
     end)
+    
+    -- RemoteEvent'leri de maksimum değerle ateşle
+    pcall(function()
+      local ReplicatedStorage = game:GetService("ReplicatedStorage")
+      for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
+        if remote:IsA("RemoteEvent") and remote.Name:lower():find("money") or remote.Name:lower():find("add") then
+          pcall(function()
+            remote:FireServer(999999999)
+          end)
+        end
+      end
+    end)
+    
+    if success then
+      _bo("Kredi Basma","Kredi maksimuma çıkarıldı! (999M)","Success")
+    else
+      _bo("Kredi Basma","Leaderstats bulunamadı, RemoteEvent'ler denendi.","Warning")
+    end
   end
 })
 
@@ -3341,23 +3415,45 @@ _cX:CreateToggle({
 })
 
 _cX:CreateButton({
-  Name="Para Bilgisi Göster",
-  Desc="Mevcut para/kredi durumunu gösterir",
+  Name="Kredi Durumu & RemoteEvent'ler",
+  Desc="Mevcut kredi/Minutes durumunu ve bulunan RemoteEvent'leri gösterir",
   Icon="info",
   Callback=function()
-    local info = ""
+    local info = "💰 "
+    local remoteInfo = "📡 RemoteEvents: "
+    
+    -- Leaderstats bilgisi
     pcall(function()
       local leaderstats = _m:FindFirstChild("leaderstats")
       if leaderstats then
         for _, stat in ipairs(leaderstats:GetChildren()) do
           info = info .. stat.Name .. ": " .. tostring(stat.Value) .. " • "
         end
+      else
+        info = info .. "Leaderstats bulunamadı. "
       end
     end)
-    if info ~= "" then
-      _bo("Para Durumu",info,"Info")
-    else
-      _bo("Para Durumu","Leaderstats bulunamadı.","Warning")
-    end
+    
+    -- RemoteEvent bilgisi
+    pcall(function()
+      local ReplicatedStorage = game:GetService("ReplicatedStorage")
+      local count = 0
+      for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
+        if remote:IsA("RemoteEvent") or remote:IsA("RemoteFunction") then
+          local name = remote.Name:lower()
+          if name:find("money") or name:find("cash") or name:find("add") or name:find("give") then
+            remoteInfo = remoteInfo .. remote.Name .. ", "
+            count = count + 1
+          end
+        end
+      end
+      if count == 0 then
+        remoteInfo = remoteInfo .. "Hiç bulunamadı"
+      end
+    end)
+    
+    _bo("Kredi Durumu",info,"Info")
+    task.wait(0.5)
+    _bo("RemoteEvent'ler",remoteInfo,"Info")
   end
 })
