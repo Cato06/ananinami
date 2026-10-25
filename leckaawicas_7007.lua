@@ -1461,7 +1461,7 @@ return _oo
 end
 local _oq=_no("Frame",{Size=UDim2.new(1,0,0,_nA),BackgroundTransparency=1},_nN)local _or=_no("Frame",{Size=UDim2.new(0,42,0,42),Position=UDim2.new(0,16,0,14),BackgroundColor3=_nn.ACCENT,BorderSizePixel=0},_oq)_np(_or,13)_nz(_or,"ACCENT","ACCENT2",45)_nt(_or,{Size=UDim2.new(1,0,1,0),Text="H",Font=Enum.Font.GothamBlack,TextSize=21,TextColor3=_nn.DARK,TextXAlignment=Enum.TextXAlignment.Center})_nt(_oq,{Position=UDim2.new(0,70,0,13),Size=UDim2.new(1,-260,0,22),Text="Oyuncular",Font=Enum.Font.GothamBold,TextSize=19})local _os=_nt(_oq,{Position=UDim2.new(0,70,0,36),Size=UDim2.new(1,-260,0,14),Text=_cN,TextSize=11,TextColor3=_nn.DIM})local _ot=_nT(_oq,"\226\128\148",UDim2.new(1,-78,0,21))local _ou=_nT(_oq,"X",UDim2.new(1,-44,0,21),"BAD")_ou.MouseButton1Click:Connect(function()_hm.Gui.Enabled=false
 end
-)local _ov=_no("Frame",{Size=UDim2.new(0,92,0,26),Position=UDim2.new(1,-(14+28+6+28+10+92),0,22),BackgroundColor3=_nn.CARD,BorderSizePixel=0},_oq)_np(_ov,13)_nq(_ov,_nn.STROKE,1,0.5)local _ow=_no("Frame",{Size=UDim2.new(0,7,0,7),Position=UDim2.new(0,11,0.5,-3),BackgroundColor3=_nn.ACCENT2,BorderSizePixel=0},_ov)_np(_ow,4)local _ox=_nt(_ov,{Position=UDim2.new(0,25,0,0),Size=UDim2.new(1,-30,1,0),Text="0 oyuncu",TextSize=11,Font=Enum.Font.GothamMedium})_hl.Drag(_oq,_nN)local _oy=_no("Frame",{Position=UDim2.new(0,0,0,_nA),Size=UDim2.new(1,0,1,-_nA),BackgroundTransparency=1},_nN)local _oz=_no("Frame",{Size=UDim2.new(1,-28,0,38),Position=UDim2.new(0,14,0,_nB),BackgroundColor3=_nn.CARD,BorderSizePixel=0},_oy)_np(_oz,13)local _oA=_nq(_oz,_nn.STROKE,1,0.3)local _oB=_no("Frame",{Position=UDim2.new(0,14,0,0),Size=UDim2.new(0,20,1,0),BackgroundTransparency=1},_oz)_p.DrawIcon(_oB,"search",_nn.ACCENT,16)local _oC=_no("TextBox",{Position=UDim2.new(0,40,0,0),Size=UDim2.new(1,-76,1,0),BackgroundTransparency=1,Font=Enum.Font.Gotham,TextSize=13,TextColor3=_nn.TEXT,TextXAlignment=Enum.TextXAlignment.Left,PlaceholderText="Oyuncu ara\226\128\166  (isim veya @kullan\196\177c\196\177 ad\196\177)",PlaceholderColor3=_nn.FAINT,Text="",ClearTextOnFocus=false,},_oz)_hl.StyleFont(_oC)local _oD=_no("TextButton",{Size=UDim2.new(0,22,0,22),Position=UDim2.new(1,-30,0.5,-11),BackgroundTransparency=1,Text="X",Font=Enum.Font.GothamBold,TextSize=11,TextColor3=_nn.FAINT,AutoButtonColor=false,Visible=false,},_oz)_oD.MouseButton1Click:Connect(function()_oC.Text=""
+)local _allServersButton=_no("TextButton",{Size=UDim2.new(0,72,0,26),Position=UDim2.new(1,-260,0,22),BackgroundColor3=_nn.PANEL,Text="Sunucular",Font=Enum.Font.GothamMedium,TextSize=10,TextColor3=_nn.TEXT,AutoButtonColor=true},_oq)_np(_allServersButton,12)_nq(_allServersButton,_nn.STROKE,1,0.5)local _ov=_no("Frame",{Size=UDim2.new(0,92,0,26),Position=UDim2.new(1,-(14+28+6+28+10+92),0,22),BackgroundColor3=_nn.CARD,BorderSizePixel=0},_oq)_np(_ov,13)_nq(_ov,_nn.STROKE,1,0.5)local _ow=_no("Frame",{Size=UDim2.new(0,7,0,7),Position=UDim2.new(0,11,0.5,-3),BackgroundColor3=_nn.ACCENT2,BorderSizePixel=0},_ov)_np(_ow,4)local _ox=_nt(_ov,{Position=UDim2.new(0,25,0,0),Size=UDim2.new(1,-30,1,0),Text="0 oyuncu",TextSize=11,Font=Enum.Font.GothamMedium})_hl.Drag(_oq,_nN)local _oy=_no("Frame",{Position=UDim2.new(0,0,0,_nA),Size=UDim2.new(1,0,1,-_nA),BackgroundTransparency=1},_nN)local _oz=_no("Frame",{Size=UDim2.new(1,-28,0,38),Position=UDim2.new(0,14,0,_nB),BackgroundColor3=_nn.CARD,BorderSizePixel=0},_oy)_np(_oz,13)local _oA=_nq(_oz,_nn.STROKE,1,0.3)local _oB=_no("Frame",{Position=UDim2.new(0,14,0,0),Size=UDim2.new(0,20,1,0),BackgroundTransparency=1},_oz)_p.DrawIcon(_oB,"search",_nn.ACCENT,16)local _oC=_no("TextBox",{Position=UDim2.new(0,40,0,0),Size=UDim2.new(1,-76,1,0),BackgroundTransparency=1,Font=Enum.Font.Gotham,TextSize=13,TextColor3=_nn.TEXT,TextXAlignment=Enum.TextXAlignment.Left,PlaceholderText="Oyuncu ara\226\128\166  (isim veya @kullan\196\177c\196\177 ad\196\177)",PlaceholderColor3=_nn.FAINT,Text="",ClearTextOnFocus=false,},_oz)_hl.StyleFont(_oC)local _oD=_no("TextButton",{Size=UDim2.new(0,22,0,22),Position=UDim2.new(1,-30,0.5,-11),BackgroundTransparency=1,Text="X",Font=Enum.Font.GothamBold,TextSize=11,TextColor3=_nn.FAINT,AutoButtonColor=false,Visible=false,},_oz)_oD.MouseButton1Click:Connect(function()_oC.Text=""
 end
 )_oC.Focused:Connect(function()_ns(_oA,0.12,{Color=_nn.ACCENT,Transparency=0})
 end
@@ -2311,6 +2311,52 @@ _cR:CreateButton({Name="Seçili sunucuya katıl",Style="Primary",Icon="log-in",C
   _bo("Sunucu tarayıcısı","Seçilen sunucuya bağlanılıyor...","Info")
   _i:TeleportToPlaceInstance(game.PlaceId,_selectedServer,_m)
 end})
+-- Sağ üstteki Sunucular düğmesi: panel içinde sunucu ara/listele.
+local _srvModal=_no("Frame",{Size=UDim2.new(0,390,0,350),Position=UDim2.new(0.5,-195,0.5,-175),BackgroundColor3=_nn.PANEL,BorderSizePixel=0,Visible=false,ZIndex=50},_nN)_np(_srvModal,16)_nq(_srvModal,_nn.STROKE,1,0)
+local _srvTitle=_nt(_srvModal,{Position=UDim2.new(0,16,0,10),Size=UDim2.new(1,-70,0,24),Text="Bütün sunucular",Font=Enum.Font.GothamBold,TextSize=16,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=51})
+local _srvClose=_no("TextButton",{Size=UDim2.new(0,28,0,26),Position=UDim2.new(1,-38,0,8),BackgroundColor3=_nn.CARD,Text="X",Font=Enum.Font.GothamBold,TextSize=12,TextColor3=_nn.TEXT,ZIndex=51},_srvModal)_np(_srvClose,8)
+local _srvSearch=_no("TextBox",{Size=UDim2.new(1,-28,0,34),Position=UDim2.new(0,14,0,44),BackgroundColor3=_nn.CARD,Text="",PlaceholderText="Oyuncu adıyla ara...",PlaceholderColor3=_nn.DIM,TextColor3=_nn.TEXT,Font=Enum.Font.Gotham,TextSize=12,ClearTextOnFocus=false,ZIndex=51},_srvModal)_np(_srvSearch,10)
+local _srvRefresh=_no("TextButton",{Size=UDim2.new(0,110,0,30),Position=UDim2.new(0,14,0,86),BackgroundColor3=_nn.CARD,Text="Sunucuları yükle",Font=Enum.Font.GothamMedium,TextSize=11,TextColor3=_nn.TEXT,ZIndex=51},_srvModal)_np(_srvRefresh,9)
+local _srvJoin=_no("TextButton",{Size=UDim2.new(0,110,0,30),Position=UDim2.new(1,-124,0,86),BackgroundColor3=_nn.ACCENT,Text="Sunucuya katıl",Font=Enum.Font.GothamMedium,TextSize=11,TextColor3=_nn.DARK,ZIndex=51},_srvModal)_np(_srvJoin,9)
+local _srvResults=_nt(_srvModal,{Position=UDim2.new(0,14,0,126),Size=UDim2.new(1,-28,1,-140),BackgroundColor3=_nn.CARD,Text="Sunucuları yüklemek için düğmeye bas.
+
+Not: Roblox API'si oyuncu isimlerini vermeyebilir.",Font=Enum.Font.Gotham,TextSize=11,TextColor3=_nn.TEXT,TextXAlignment=Enum.TextXAlignment.Left,TextYAlignment=Enum.TextYAlignment.Top,ZIndex=51})_srvResults.TextWrapped=true
+local _srvSelected=nil
+local function _srvRender()
+  local q=string.lower(_srvSearch.Text or "") local lines={} local count=0 _srvSelected=nil
+  for _,row in ipairs(_serverRows) do
+    local match=(q=="")
+    if not match then for _,name in ipairs(row.playerNames or {}) do if string.find(string.lower(name),q,1,true) then match=true break end end end
+    if match then count+=1 if not _srvSelected then _srvSelected=row.id end table.insert(lines,row.label) end
+  end
+  if #lines==0 then _srvResults.Text="Eşleşme yok veya oyuncu isimleri API'de mevcut değil.
+Sunucuları yenilemeyi deneyebilirsin." else _srvResults.Text=table.concat(lines,"
+") end
+  _srvTitle.Text="Bütün sunucular ("..count..")"
+end
+_srvSearch:GetPropertyChangedSignal("Text"):Connect(_srvRender)
+_srvClose.MouseButton1Click:Connect(function() _srvModal.Visible=false end)
+_allServersButton.MouseButton1Click:Connect(function() _srvModal.Visible=not _srvModal.Visible _srvRender() end)
+_srvRefresh.MouseButton1Click:Connect(function()
+  _srvResults.Text="Herkese açık sunucular yükleniyor..."
+  task.spawn(function()
+    local found,cursor,seen={},nil,{}
+    for page=1,20 do
+      local url="https://games.roblox.com/v1/games/"..game.PlaceId.."/servers/Public?sortOrder=Asc&limit=100"
+      if cursor then url=url.."&cursor=".._j:UrlEncode(cursor) end
+      local ok,data=pcall(function() return _j:JSONDecode(game:HttpGet(url)) end)
+      if not ok or type(data)~="table" or type(data.data)~="table" then break end
+      for _,srv in ipairs(data.data) do if srv.id and srv.id~=game.JobId and not seen[srv.id] then
+        seen[srv.id]=true local names={}
+        if type(srv.players)=="table" then for _,plr in ipairs(srv.players) do local nm=plr.displayName or plr.name or plr.username if type(nm)=="string" and nm~="" then table.insert(names,nm) end end end
+        table.insert(found,{id=srv.id,playerNames=names,playing=srv.playing or 0,maxPlayers=srv.maxPlayers or 0,label=(#names>0 and names[1] or "İsim API'de yok").." · "..tostring(srv.playing or 0).."/"..tostring(srv.maxPlayers or 0).." · "..string.sub(srv.id,1,8)})
+      end end
+      cursor=data.nextPageCursor if not cursor then break end
+    end
+    _serverRows=found _srvRender()
+  end)
+end)
+_srvJoin.MouseButton1Click:Connect(function() if not _srvSelected then _bo("Sunucular","Önce sunucuları yükle ve eşleşen bir sunucu seç.","Warning") return end _i:TeleportToPlaceInstance(game.PlaceId,_srvSelected,_m) end)
 _cX:CreateButton({Name="JobId kopyala",Icon="copy",Callback=function()_bo("\195\135e\197\159itli",_bN(game.JobId)and "JobId kopyaland\196\177."or "Panoya kopyalama desteklenmiyor.","Info")
 end
 ,})_cX:CreateButton({Name="PlaceId kopyala",Icon="copy",Callback=function()_bo("\195\135e\197\159itli",_bN(tostring(game.PlaceId))and "PlaceId kopyaland\196\177."or "Panoya kopyalama desteklenmiyor.","Info")
