@@ -2318,9 +2318,7 @@ local _srvClose=_no("TextButton",{Size=UDim2.new(0,28,0,26),Position=UDim2.new(1
 local _srvSearch=_no("TextBox",{Size=UDim2.new(1,-28,0,34),Position=UDim2.new(0,14,0,44),BackgroundColor3=_nn.CARD,Text="",PlaceholderText="Oyuncu adıyla ara...",PlaceholderColor3=_nn.DIM,TextColor3=_nn.TEXT,Font=Enum.Font.Gotham,TextSize=12,ClearTextOnFocus=false,ZIndex=51},_srvModal)_np(_srvSearch,10)
 local _srvRefresh=_no("TextButton",{Size=UDim2.new(0,110,0,30),Position=UDim2.new(0,14,0,86),BackgroundColor3=_nn.CARD,Text="Sunucuları yükle",Font=Enum.Font.GothamMedium,TextSize=11,TextColor3=_nn.TEXT,ZIndex=51},_srvModal)_np(_srvRefresh,9)
 local _srvJoin=_no("TextButton",{Size=UDim2.new(0,110,0,30),Position=UDim2.new(1,-124,0,86),BackgroundColor3=_nn.ACCENT,Text="Sunucuya katıl",Font=Enum.Font.GothamMedium,TextSize=11,TextColor3=_nn.DARK,ZIndex=51},_srvModal)_np(_srvJoin,9)
-local _srvResults=_nt(_srvModal,{Position=UDim2.new(0,14,0,126),Size=UDim2.new(1,-28,1,-140),BackgroundColor3=_nn.CARD,Text="Sunucuları yüklemek için düğmeye bas.
-
-Not: Roblox API'si oyuncu isimlerini vermeyebilir.",Font=Enum.Font.Gotham,TextSize=11,TextColor3=_nn.TEXT,TextXAlignment=Enum.TextXAlignment.Left,TextYAlignment=Enum.TextYAlignment.Top,ZIndex=51})_srvResults.TextWrapped=true
+local _srvResults=_nt(_srvModal,{Position=UDim2.new(0,14,0,126),Size=UDim2.new(1,-28,1,-140),BackgroundColor3=_nn.CARD,Text="Sunucuları yüklemek için düğmeye bas.\n\nNot: Roblox API'si oyuncu isimlerini vermeyebilir.",Font=Enum.Font.Gotham,TextSize=11,TextColor3=_nn.TEXT,TextXAlignment=Enum.TextXAlignment.Left,TextYAlignment=Enum.TextYAlignment.Top,ZIndex=51})_srvResults.TextWrapped=true
 local _srvSelected=nil
 local function _srvRender()
   local q=string.lower(_srvSearch.Text or "") local lines={} local count=0 _srvSelected=nil
@@ -2329,9 +2327,7 @@ local function _srvRender()
     if not match then for _,name in ipairs(row.playerNames or {}) do if string.find(string.lower(name),q,1,true) then match=true break end end end
     if match then count+=1 if not _srvSelected then _srvSelected=row.id end table.insert(lines,row.label) end
   end
-  if #lines==0 then _srvResults.Text="Eşleşme yok veya oyuncu isimleri API'de mevcut değil.
-Sunucuları yenilemeyi deneyebilirsin." else _srvResults.Text=table.concat(lines,"
-") end
+  if #lines==0 then _srvResults.Text="Eşleşme yok veya oyuncu isimleri API'de mevcut değil.\nSunucuları yenilemeyi deneyebilirsin." else _srvResults.Text=table.concat(lines,"\n") end
   _srvTitle.Text="Bütün sunucular ("..count..")"
 end
 _srvSearch:GetPropertyChangedSignal("Text"):Connect(_srvRender)
