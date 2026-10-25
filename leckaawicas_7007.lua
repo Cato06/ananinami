@@ -2221,11 +2221,49 @@ end
 local _serverRows = {}
 local _serverOptions = {"Önce sunucuları yenile"}
 local _selectedServer = nil
-_cR:CreateSection("Sunucu tarayıcısı · tüm herkese açık sunucular")
-_cR:CreateDropdown({Name="Sunucu seç",Options=_serverOptions,CurrentOption="Önce sunucuları yenile",Flag="PublicServerSelect",Callback=function(choice)
-  if type(choice)=="table" then choice=choice[1] end
+local _serverNameQuery = ""
+local function _serverMatches(row, query)
+  if query=="" then return true end
+  query=string.lower(query)
+  for _,name in ipairs(row.playerNames or {}) do
+    if string.find(string.lower(name),query,1,true) then return true end
+  end
+  return false
+end
+local function _refreshServerDropdown()
+  local opts={}
   for _,row in ipairs(_serverRows) do
-    if row.label==choice then _selectedServer=row.id break end
+    if _serverMatches(row,_serverNameQuery) then table.insert(opts,row.label) end
+  end
+  if #opts==0 then opts={"Eşleşen sunucu yok / isim verisi yok"} end
+  _serverOptions=opts
+  _cR:CreateDropdown({Name="Sunucu seç (eşleşen: "..(#opts==1 and (_serverOptions[1]=="Eşleşen sunucu yok / isim verisi yok" and "0" or "1") or #opts)..")",Options=_serverOptions,CurrentOption=_serverOptions[1],Flag="PublicServerSelectFiltered",Callback=function(choice)
+    if type(choice)=="table" then choice=choice[1] end
+    for _,row in ipairs(_serverRows) do if row.label==choice then _selectedServer=row.id break end end
+  end})
+  _selectedServer=nil
+  for _,row in ipairs(_serverRows) do
+    if _serverMatches(row,_serverNameQuery) then _selectedServer=row.id break end
+  end
+end
+_cR:CreateSection("Sunucu tarayıcısı · oyuncu adıyla ara")
+_cR:CreateDropdown({Name="Sunucu seç",Options=_serverOptions,CurrentOption=_serverOptions[1],Flag="PublicServerSelect",Callback=function(choice)
+  if type(choice)=="table" then choice=choice[1] end
+  for _,row in ipairs(_serverRows) do if row.label==choice then _selectedServer=row.id break end end
+end})
+_cR:CreateInput({Name="Oyuncu adına göre sunucu ara",Desc="Sunucu API'si oyuncu isimlerini veriyorsa eşleşen sunucuları gösterir",PlaceholderText="Oyuncu adı veya görünen ad",MaxLength=32,Callback=function(value,enterPressed)
+  if not enterPressed then return end
+  _serverNameQuery=tostring(value or "")
+  if #_serverRows==0 then _bo("Sunucu arama","Önce herkese açık sunucuları yenile.","Warning") return end
+  _refreshServerDropdown()
+  local matches=0
+  for _,row in ipairs(_serverRows) do if _serverMatches(row,_serverNameQuery) then matches=matches+1 end end
+  if _serverNameQuery=="" then
+    _bo("Sunucu arama","Arama temizlendi; sunucu listesi gösteriliyor.","Info")
+  elseif matches==0 then
+    _bo("Sunucu arama","Eşleşme yok. Roblox API'si diğer sunucuların oyuncu isimlerini sağlamıyor olabilir.","Warning")
+  else
+    _bo("Sunucu arama",matches.." eşleşen sunucu bulundu.","Success")
   end
 end})
 _cR:CreateButton({Name="Sunucuları yenile (sayfalar halinde)",Icon="refresh-cw",Callback=function()
@@ -2241,8 +2279,17 @@ _cR:CreateButton({Name="Sunucuları yenile (sayfalar halinde)",Icon="refresh-cw"
       for _,srv in ipairs(data.data) do
         if srv.id and srv.id~=game.JobId and (srv.maxPlayers or 0)>(srv.playing or 0) and not seen[srv.id] then
           seen[srv.id]=true
-          local label=string.format("%d/%d oyuncu · %s",srv.playing or 0,srv.maxPlayers or 0,string.sub(srv.id,1,8))
-          table.insert(found,{id=srv.id,label=label})
+          local names={}
+          -- API yanıtında players alanı varsa görünen ad/kullanıcı adını al.
+          if type(srv.players)=="table" then
+            for _,player in ipairs(srv.players) do
+              local name=player.displayName or player.name or player.username
+              if type(name)=="string" and name~="" then table.insert(names,name) end
+            end
+          end
+          local firstName=(#names>0 and names[1] or "Oyuncu adı API'de yok")
+          local label=string.format("%s · %d/%d · %s",firstName,srv.playing or 0,srv.maxPlayers or 0,string.sub(srv.id,1,8))
+          table.insert(found,{id=srv.id,label=label,playerNames=names,playing=srv.playing or 0,maxPlayers=srv.maxPlayers or 0})
         end
       end
       cursor=data.nextPageCursor
@@ -2253,19 +2300,14 @@ _cR:CreateButton({Name="Sunucuları yenile (sayfalar halinde)",Icon="refresh-cw"
       return
     end
     _serverRows=found
-    _serverOptions={}
-    for _,row in ipairs(found) do table.insert(_serverOptions,row.label) end
-    -- Dropdown seçeneklerini yeni listeyle yeniden oluştur.
-    _cR:CreateDropdown({Name="Sunucu seç ("..#found.." bulundu)",Options=_serverOptions,CurrentOption=_serverOptions[1],Flag="PublicServerSelectLoaded",Callback=function(choice)
-      if type(choice)=="table" then choice=choice[1] end
-      for _,row in ipairs(_serverRows) do if row.label==choice then _selectedServer=row.id break end end
-    end})
-    _selectedServer=found[1].id
-    _bo("Sunucu tarayıcısı",#found.." herkese açık sunucu listelendi. Daha fazlası için yenilemeyi tekrar kullan.","Success")
+    _refreshServerDropdown()
+    local named=0
+    for _,row in ipairs(found) do if #(row.playerNames or {})>0 then named=named+1 end end
+    _bo("Sunucu tarayıcısı",#found.." herkese açık sunucu listelendi; "..named.." sunucuda API oyuncu adı döndürdü.",named>0 and "Success" or "Warning")
   end)
 end})
 _cR:CreateButton({Name="Seçili sunucuya katıl",Style="Primary",Icon="log-in",Callback=function()
-  if not _selectedServer then _bo("Sunucu tarayıcısı","Önce listeyi yenileyip bir sunucu seç.","Warning") return end
+  if not _selectedServer then _bo("Sunucu tarayıcısı","Önce listeyi yenileyip eşleşen bir sunucu seç.","Warning") return end
   _bo("Sunucu tarayıcısı","Seçilen sunucuya bağlanılıyor...","Info")
   _i:TeleportToPlaceInstance(game.PlaceId,_selectedServer,_m)
 end})
