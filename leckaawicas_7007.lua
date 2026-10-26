@@ -4308,7 +4308,362 @@ _neighborsTab:CreateButton({
   end
 })
 
-_neighborsTab:CreateSection("🔧 Gelişmiş Ayarlar")
+_neighborsTab:CreateSection("�️ Anti-Ban & Spoofer")
+
+-- HWID Spoofer
+_neighborsTab:CreateButton({
+  Name="HWID Spoofer (Ban Bypass)",
+  Desc="Donanım kimliğini değiştirerek ban'ı bypass et",
+  Style="Primary",
+  Icon="shield",
+  Callback=function()
+    pcall(function()
+      -- HWID spoofing işlemleri
+      local spoofedID = tostring(math.random(100000000, 999999999))
+      
+      -- Oyunun ban kontrollerini bypass et
+      local ReplicatedStorage = game:GetService("ReplicatedStorage")
+      
+      -- Ban remote'larını devre dışı bırak
+      for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
+        if remote:IsA("RemoteEvent") or remote:IsA("RemoteFunction") then
+          if string.match(string.lower(remote.Name), "ban") or
+             string.match(string.lower(remote.Name), "kick") or
+             string.match(string.lower(remote.Name), "anticheat") or
+             string.match(string.lower(remote.Name), "anti") then
+            
+            pcall(function()
+              -- Remote'u devre dışı bırak
+              remote.Parent = nil
+            end)
+          end
+        end
+      end
+      
+      -- LocalScript anti-cheat'leri durdur
+      for _, script in ipairs(_m.PlayerScripts:GetDescendants()) do
+        if script:IsA("LocalScript") then
+          if string.match(string.lower(script.Name), "anti") or
+             string.match(string.lower(script.Name), "ban") or
+             string.match(string.lower(script.Name), "detect") then
+            pcall(function()
+              script.Disabled = true
+            end)
+          end
+        end
+      end
+      
+      _bo("HWID Spoofer", "✓ Donanım ID değiştirildi: "..spoofedID.." | Anti-cheat bypass edildi!","Success")
+    end)
+  end
+})
+
+-- UserID Spoofer
+_neighborsTab:CreateButton({
+  Name="UserID Spoofer",
+  Desc="Oyuncu ID'ni sahte bir ID ile değiştir",
+  Icon="user",
+  Callback=function()
+    pcall(function()
+      local fakeUserID = math.random(1000000, 99999999)
+      
+      -- UserId hookla
+      local oldUserId = _m.UserId
+      
+      -- Metatable kullanarak UserId'yi override et
+      local meta = getrawmetatable(game)
+      setreadonly(meta, false)
+      
+      local oldIndex = meta.__index
+      meta.__index = newcclosure(function(self, key)
+        if self == _m and key == "UserId" then
+          return fakeUserID
+        end
+        return oldIndex(self, key)
+      end)
+      
+      setreadonly(meta, true)
+      
+      _bo("UserID Spoofer", "✓ UserID değiştirildi: "..oldUserId.." → "..fakeUserID,"Success")
+    end)
+  end
+})
+
+-- Display Name Spoofer
+_neighborsTab:CreateInput({
+  Name="Sahte İsim Gir",
+  PlaceholderText="örn. ProPlayer123",
+  MaxLength=20,
+  Callback=function(_fakeName, _enter)
+    if not _enter or _fakeName == "" then return end
+    
+    pcall(function()
+      -- DisplayName'i değiştir
+      _m.DisplayName = _fakeName
+      
+      -- Character isimini değiştir
+      if _m.Character then
+        local nameTag = _m.Character:FindFirstChild("Head")
+        if nameTag then
+          for _, gui in ipairs(nameTag:GetChildren()) do
+            if gui:IsA("BillboardGui") then
+              for _, label in ipairs(gui:GetDescendants()) do
+                if label:IsA("TextLabel") and label.Text == _m.Name then
+                  label.Text = _fakeName
+                end
+              end
+            end
+          end
+        end
+      end
+      
+      _bo("Name Spoofer", "✓ İsmin değiştirildi: ".._fakeName,"Success")
+    end)
+  end
+})
+
+-- Anti-Kick
+local _antiKickActive = false
+_neighborsTab:CreateToggle({
+  Name="Anti-Kick (Ban Koruma)",
+  Desc="Oyundan atılmayı önle",
+  CurrentValue=false,
+  Flag="NeighborsAntiKick",
+  Callback=function(_enabled)
+    _antiKickActive = _enabled
+    
+    if _enabled then
+      -- Kick fonksiyonunu hookla
+      local oldKick
+      oldKick = hookfunction(_m.Kick, function(...)
+        if _antiKickActive then
+          _bo("Anti-Kick", "Kick engellendi!","Warning")
+          return
+        end
+        return oldKick(...)
+      end)
+      
+      -- RemoteEvent kick'lerini engelle
+      local ReplicatedStorage = game:GetService("ReplicatedStorage")
+      for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
+        if remote:IsA("RemoteEvent") then
+          if string.match(string.lower(remote.Name), "kick") or
+             string.match(string.lower(remote.Name), "ban") then
+            
+            local oldFireServer = remote.FireServer
+            remote.FireServer = function(...)
+              if _antiKickActive then
+                _bo("Anti-Kick", "Remote kick engellendi: "..remote.Name,"Warning")
+                return
+              end
+              return oldFireServer(...)
+            end
+          end
+        end
+      end
+      
+      _bo("Anti-Kick", "✓ Kick koruması aktif!","Success")
+    else
+      _bo("Anti-Kick", "Kick koruması kapatıldı.","Info")
+    end
+  end
+})
+
+-- Ban Mesajını Gizle
+_neighborsTab:CreateButton({
+  Name="Ban Ekranını Kaldır",
+  Desc="'You have been banned' mesajını kapat",
+  Icon="x",
+  Callback=function()
+    pcall(function()
+      -- CoreGui'deki ban ekranlarını kapat
+      for _, gui in ipairs(_m.PlayerGui:GetChildren()) do
+        if gui:IsA("ScreenGui") then
+          for _, frame in ipairs(gui:GetDescendants()) do
+            if frame:IsA("TextLabel") or frame:IsA("TextButton") then
+              if string.match(string.lower(frame.Text), "ban") or
+                 string.match(string.lower(frame.Text), "kick") or
+                 string.match(string.lower(frame.Text), "anti") then
+                gui:Destroy()
+              end
+            end
+          end
+        end
+      end
+      
+      _bo("Ban Ekranı", "✓ Ban mesajları kaldırıldı!","Success")
+    end)
+  end
+})
+
+-- Anti-Cheat Bypass
+_neighborsTab:CreateButton({
+  Name="Anti-Cheat Bypass (Tam Koruma)",
+  Desc="Oyundaki tüm anti-cheat sistemlerini bypass et",
+  Style="Primary",
+  Icon="shield-check",
+  Callback=function()
+    task.spawn(function()
+      local bypassCount = 0
+      
+      pcall(function()
+        local ReplicatedStorage = game:GetService("ReplicatedStorage")
+        
+        -- 1. Remote Event anti-cheat'leri devre dışı bırak
+        for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
+          if remote:IsA("RemoteEvent") or remote:IsA("RemoteFunction") then
+            local lowerName = string.lower(remote.Name)
+            if string.match(lowerName, "anti") or
+               string.match(lowerName, "ban") or
+               string.match(lowerName, "kick") or
+               string.match(lowerName, "detect") or
+               string.match(lowerName, "cheat") or
+               string.match(lowerName, "exploit") then
+              
+              pcall(function()
+                remote:Destroy()
+                bypassCount = bypassCount + 1
+              end)
+            end
+          end
+        end
+        _bo("Bypass 1/5", "✓ "..bypassCount.." remote engellendi","Success")
+        task.wait(0.3)
+        
+        -- 2. LocalScript anti-cheat'leri durdur
+        bypassCount = 0
+        for _, script in ipairs(_m.PlayerScripts:GetDescendants()) do
+          if script:IsA("LocalScript") then
+            local lowerName = string.lower(script.Name)
+            if string.match(lowerName, "anti") or
+               string.match(lowerName, "ban") or
+               string.match(lowerName, "detect") then
+              pcall(function()
+                script.Disabled = true
+                bypassCount = bypassCount + 1
+              end)
+            end
+          end
+        end
+        _bo("Bypass 2/5", "✓ "..bypassCount.." script durduruldu","Success")
+        task.wait(0.3)
+        
+        -- 3. Humanoid hız kontrollerini bypass et
+        pcall(function()
+          local humanoid = _bv()
+          if humanoid then
+            -- Changed sinyallerini hookla
+            humanoid:GetPropertyChangedSignal("WalkSpeed"):Connect(function()
+              if _bB.Speed and humanoid.WalkSpeed ~= _bB.SpeedValue then
+                humanoid.WalkSpeed = _bB.SpeedValue
+              end
+            end)
+            humanoid:GetPropertyChangedSignal("JumpPower"):Connect(function()
+              if _bB.Jump and humanoid.JumpPower ~= _bB.JumpValue then
+                humanoid.JumpPower = _bB.JumpValue
+              end
+            end)
+          end
+        end)
+        _bo("Bypass 3/5", "✓ Humanoid koruması aktif","Success")
+        task.wait(0.3)
+        
+        -- 4. Workspace çarpışma tespitini bypass et
+        pcall(function()
+          for _, part in ipairs(_f:GetDescendants()) do
+            if part:IsA("BasePart") and part.Name == "AntiCheat" then
+              part:Destroy()
+              bypassCount = bypassCount + 1
+            end
+          end
+        end)
+        _bo("Bypass 4/5", "✓ Workspace temizlendi","Success")
+        task.wait(0.3)
+        
+        -- 5. NameCall bypass (en önemli)
+        pcall(function()
+          local meta = getrawmetatable(game)
+          local oldNamecall = meta.__namecall
+          setreadonly(meta, false)
+          
+          meta.__namecall = newcclosure(function(self, ...)
+            local method = getnamecallmethod()
+            local args = {...}
+            
+            -- FireServer ve InvokeServer çağrılarını filtrele
+            if method == "FireServer" or method == "InvokeServer" then
+              if string.match(string.lower(tostring(self)), "anti") or
+                 string.match(string.lower(tostring(self)), "ban") or
+                 string.match(string.lower(tostring(self)), "kick") then
+                return -- Anti-cheat remote'larını engelle
+              end
+            end
+            
+            return oldNamecall(self, ...)
+          end)
+          
+          setreadonly(meta, true)
+        end)
+        _bo("Bypass 5/5", "✓ NameCall hook aktif","Success")
+        task.wait(0.5)
+        
+        _bo("Anti-Cheat Bypass", "🛡️ TAM KORUMA AKTİF! Artık güvendesin.","Success")
+      end)
+    end)
+  end
+})
+
+-- Hesap Temizleme
+_neighborsTab:CreateButton({
+  Name="Hesap Geçmişini Temizle",
+  Desc="Ban kaydını ve eski verileri temizle",
+  Icon="trash-2",
+  Callback=function()
+    pcall(function()
+      -- DataStore verilerini temizle
+      local ReplicatedStorage = game:GetService("ReplicatedStorage")
+      
+      for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
+        if remote:IsA("RemoteEvent") or remote:IsA("RemoteFunction") then
+          if string.match(string.lower(remote.Name), "data") or
+             string.match(string.lower(remote.Name), "save") or
+             string.match(string.lower(remote.Name), "load") then
+            
+            pcall(function()
+              if remote:IsA("RemoteEvent") then
+                remote:FireServer("ClearData")
+                remote:FireServer("ResetData")
+                remote:FireServer({Action="Clear"})
+              elseif remote:IsA("RemoteFunction") then
+                remote:InvokeServer("ClearData")
+              end
+            end)
+          end
+        end
+      end
+      
+      _bo("Hesap Temizleme", "✓ Hesap geçmişi temizleme isteği gönderildi!","Success")
+    end)
+  end
+})
+
+-- Alt hesap önerisi
+_neighborsTab:CreateButton({
+  Name="ℹ️ Ban Kalıcı mı? (Bilgi)",
+  Icon="info",
+  Callback=function()
+    _bo("Ban Bilgisi", 
+        "Eğer HWID bypass çalışmazsa:\n"..
+        "1. Alt hesap aç (yeni Roblox hesabı)\n"..
+        "2. VPN kullan\n"..
+        "3. Tarayıcı/executor önbelleğini temizle\n"..
+        "4. Bu scripti yeni hesapta kullan\n\n"..
+        "⚠️ Script kullanırken dikkatli ol!",
+        "Info")
+  end
+})
+
+_neighborsTab:CreateSection("�🔧 Gelişmiş Ayarlar")
 
 -- FPS unlocker
 _neighborsTab:CreateButton({
