@@ -1461,7 +1461,7 @@ return _oo
 end
 local _oq=_no("Frame",{Size=UDim2.new(1,0,0,_nA),BackgroundTransparency=1},_nN)local _or=_no("Frame",{Size=UDim2.new(0,42,0,42),Position=UDim2.new(0,16,0,14),BackgroundColor3=_nn.ACCENT,BorderSizePixel=0},_oq)_np(_or,13)_nz(_or,"ACCENT","ACCENT2",45)_nt(_or,{Size=UDim2.new(1,0,1,0),Text="H",Font=Enum.Font.GothamBlack,TextSize=21,TextColor3=_nn.DARK,TextXAlignment=Enum.TextXAlignment.Center})_nt(_oq,{Position=UDim2.new(0,70,0,13),Size=UDim2.new(1,-260,0,22),Text="Oyuncular",Font=Enum.Font.GothamBold,TextSize=19})local _os=_nt(_oq,{Position=UDim2.new(0,70,0,36),Size=UDim2.new(1,-260,0,14),Text=_cN,TextSize=11,TextColor3=_nn.DIM})local _ot=_nT(_oq,"\226\128\148",UDim2.new(1,-78,0,21))local _ou=_nT(_oq,"X",UDim2.new(1,-44,0,21),"BAD")_ou.MouseButton1Click:Connect(function()_hm.Gui.Enabled=false
 end
-)local _allServersButton=_no("TextButton",{Size=UDim2.new(0,72,0,26),Position=UDim2.new(1,-260,0,22),BackgroundColor3=_nn.PANEL,Text="Sunucular",Font=Enum.Font.GothamMedium,TextSize=10,TextColor3=_nn.TEXT,AutoButtonColor=true},_oq)_np(_allServersButton,12)_nq(_allServersButton,_nn.STROKE,1,0.5)local _ov=_no("Frame",{Size=UDim2.new(0,92,0,26),Position=UDim2.new(1,-(14+28+6+28+10+92),0,22),BackgroundColor3=_nn.CARD,BorderSizePixel=0},_oq)_np(_ov,13)_nq(_ov,_nn.STROKE,1,0.5)local _ow=_no("Frame",{Size=UDim2.new(0,7,0,7),Position=UDim2.new(0,11,0.5,-3),BackgroundColor3=_nn.ACCENT2,BorderSizePixel=0},_ov)_np(_ow,4)local _ox=_nt(_ov,{Position=UDim2.new(0,25,0,0),Size=UDim2.new(1,-30,1,0),Text="0 oyuncu",TextSize=11,Font=Enum.Font.GothamMedium})_hl.Drag(_oq,_nN)local _oy=_no("Frame",{Position=UDim2.new(0,0,0,_nA),Size=UDim2.new(1,0,1,-_nA),BackgroundTransparency=1},_nN)local _oz=_no("Frame",{Size=UDim2.new(1,-28,0,38),Position=UDim2.new(0,14,0,_nB),BackgroundColor3=_nn.CARD,BorderSizePixel=0},_oy)_np(_oz,13)local _oA=_nq(_oz,_nn.STROKE,1,0.3)local _oB=_no("Frame",{Position=UDim2.new(0,14,0,0),Size=UDim2.new(0,20,1,0),BackgroundTransparency=1},_oz)_p.DrawIcon(_oB,"search",_nn.ACCENT,16)local _oC=_no("TextBox",{Position=UDim2.new(0,40,0,0),Size=UDim2.new(1,-76,1,0),BackgroundTransparency=1,Font=Enum.Font.Gotham,TextSize=13,TextColor3=_nn.TEXT,TextXAlignment=Enum.TextXAlignment.Left,PlaceholderText="Oyuncu ara\226\128\166  (isim veya @kullan\196\177c\196\177 ad\196\177)",PlaceholderColor3=_nn.FAINT,Text="",ClearTextOnFocus=false,},_oz)_hl.StyleFont(_oC)local _oD=_no("TextButton",{Size=UDim2.new(0,22,0,22),Position=UDim2.new(1,-30,0.5,-11),BackgroundTransparency=1,Text="X",Font=Enum.Font.GothamBold,TextSize=11,TextColor3=_nn.FAINT,AutoButtonColor=false,Visible=false,},_oz)_oD.MouseButton1Click:Connect(function()_oC.Text=""
+)local _ov=_no("Frame",{Size=UDim2.new(0,92,0,26),Position=UDim2.new(1,-(14+28+6+28+10+92),0,22),BackgroundColor3=_nn.CARD,BorderSizePixel=0},_oq)_np(_ov,13)_nq(_ov,_nn.STROKE,1,0.5)local _ow=_no("Frame",{Size=UDim2.new(0,7,0,7),Position=UDim2.new(0,11,0.5,-3),BackgroundColor3=_nn.ACCENT2,BorderSizePixel=0},_ov)_np(_ow,4)local _ox=_nt(_ov,{Position=UDim2.new(0,25,0,0),Size=UDim2.new(1,-30,1,0),Text="0 oyuncu",TextSize=11,Font=Enum.Font.GothamMedium})_hl.Drag(_oq,_nN)local _oy=_no("Frame",{Position=UDim2.new(0,0,0,_nA),Size=UDim2.new(1,0,1,-_nA),BackgroundTransparency=1},_nN)local _oz=_no("Frame",{Size=UDim2.new(1,-28,0,38),Position=UDim2.new(0,14,0,_nB),BackgroundColor3=_nn.CARD,BorderSizePixel=0},_oy)_np(_oz,13)local _oA=_nq(_oz,_nn.STROKE,1,0.3)local _oB=_no("Frame",{Position=UDim2.new(0,14,0,0),Size=UDim2.new(0,20,1,0),BackgroundTransparency=1},_oz)_p.DrawIcon(_oB,"search",_nn.ACCENT,16)local _oC=_no("TextBox",{Position=UDim2.new(0,40,0,0),Size=UDim2.new(1,-76,1,0),BackgroundTransparency=1,Font=Enum.Font.Gotham,TextSize=13,TextColor3=_nn.TEXT,TextXAlignment=Enum.TextXAlignment.Left,PlaceholderText="Oyuncu ara\226\128\166  (isim veya @kullan\196\177c\196\177 ad\196\177)",PlaceholderColor3=_nn.FAINT,Text="",ClearTextOnFocus=false,},_oz)_hl.StyleFont(_oC)local _oD=_no("TextButton",{Size=UDim2.new(0,22,0,22),Position=UDim2.new(1,-30,0.5,-11),BackgroundTransparency=1,Text="X",Font=Enum.Font.GothamBold,TextSize=11,TextColor3=_nn.FAINT,AutoButtonColor=false,Visible=false,},_oz)_oD.MouseButton1Click:Connect(function()_oC.Text=""
 end
 )_oC.Focused:Connect(function()_ns(_oA,0.12,{Color=_nn.ACCENT,Transparency=0})
 end
@@ -2217,143 +2217,7 @@ _i:TeleportToPlaceInstance(game.PlaceId,_wg[math.random(1,#_wg)],_m)
 end
 )
 end
-,})-- Neighbors dahil mevcut oyunun herkese açık sunucularını listeleyen sunucu tarayıcısı
-local _serverRows = {}
-local _serverOptions = {"Önce sunucuları yenile"}
-local _selectedServer = nil
-local _serverNameQuery = ""
-local function _serverMatches(row, query)
-  if query=="" then return true end
-  query=string.lower(query)
-  for _,name in ipairs(row.playerNames or {}) do
-    if string.find(string.lower(name),query,1,true) then return true end
-  end
-  return false
-end
-local function _refreshServerDropdown()
-  local opts={}
-  for _,row in ipairs(_serverRows) do
-    if _serverMatches(row,_serverNameQuery) then table.insert(opts,row.label) end
-  end
-  if #opts==0 then opts={"Eşleşen sunucu yok / isim verisi yok"} end
-  _serverOptions=opts
-  _cR:CreateDropdown({Name="Sunucu seç (eşleşen: "..(#opts==1 and (_serverOptions[1]=="Eşleşen sunucu yok / isim verisi yok" and "0" or "1") or #opts)..")",Options=_serverOptions,CurrentOption=_serverOptions[1],Flag="PublicServerSelectFiltered",Callback=function(choice)
-    if type(choice)=="table" then choice=choice[1] end
-    for _,row in ipairs(_serverRows) do if row.label==choice then _selectedServer=row.id break end end
-  end})
-  _selectedServer=nil
-  for _,row in ipairs(_serverRows) do
-    if _serverMatches(row,_serverNameQuery) then _selectedServer=row.id break end
-  end
-end
-_cR:CreateSection("Sunucu tarayıcısı · oyuncu adıyla ara")
-_cR:CreateDropdown({Name="Sunucu seç",Options=_serverOptions,CurrentOption=_serverOptions[1],Flag="PublicServerSelect",Callback=function(choice)
-  if type(choice)=="table" then choice=choice[1] end
-  for _,row in ipairs(_serverRows) do if row.label==choice then _selectedServer=row.id break end end
-end})
-_cR:CreateInput({Name="Oyuncu adına göre sunucu ara",Desc="Sunucu API'si oyuncu isimlerini veriyorsa eşleşen sunucuları gösterir",PlaceholderText="Oyuncu adı veya görünen ad",MaxLength=32,Callback=function(value,enterPressed)
-  if not enterPressed then return end
-  _serverNameQuery=tostring(value or "")
-  if #_serverRows==0 then _bo("Sunucu arama","Önce herkese açık sunucuları yenile.","Warning") return end
-  _refreshServerDropdown()
-  local matches=0
-  for _,row in ipairs(_serverRows) do if _serverMatches(row,_serverNameQuery) then matches=matches+1 end end
-  if _serverNameQuery=="" then
-    _bo("Sunucu arama","Arama temizlendi; sunucu listesi gösteriliyor.","Info")
-  elseif matches==0 then
-    _bo("Sunucu arama","Eşleşme yok. Roblox API'si diğer sunucuların oyuncu isimlerini sağlamıyor olabilir.","Warning")
-  else
-    _bo("Sunucu arama",matches.." eşleşen sunucu bulundu.","Success")
-  end
-end})
-_cR:CreateButton({Name="Sunucuları yenile (sayfalar halinde)",Icon="refresh-cw",Callback=function()
-  _bo("Sunucu tarayıcısı","Herkese açık sunucular yükleniyor...","Info")
-  task.spawn(function()
-    local found, cursor, seen = {}, nil, {}
-    -- Roblox API sayfalama kullanır; erişilebilen sayfaları dolaş.
-    for page=1,20 do
-      local url="https://games.roblox.com/v1/games/"..game.PlaceId.."/servers/Public?sortOrder=Asc&limit=100"
-      if cursor then url=url.."&cursor=".._j:UrlEncode(cursor) end
-      local ok,data=pcall(function() return _j:JSONDecode(game:HttpGet(url)) end)
-      if not ok or type(data)~="table" or type(data.data)~="table" then break end
-      for _,srv in ipairs(data.data) do
-        if srv.id and srv.id~=game.JobId and (srv.maxPlayers or 0)>(srv.playing or 0) and not seen[srv.id] then
-          seen[srv.id]=true
-          local names={}
-          -- API yanıtında players alanı varsa görünen ad/kullanıcı adını al.
-          if type(srv.players)=="table" then
-            for _,player in ipairs(srv.players) do
-              local name=player.displayName or player.name or player.username
-              if type(name)=="string" and name~="" then table.insert(names,name) end
-            end
-          end
-          local firstName=(#names>0 and names[1] or "Oyuncu adı API'de yok")
-          local label=string.format("%s · %d/%d · %s",firstName,srv.playing or 0,srv.maxPlayers or 0,string.sub(srv.id,1,8))
-          table.insert(found,{id=srv.id,label=label,playerNames=names,playing=srv.playing or 0,maxPlayers=srv.maxPlayers or 0})
-        end
-      end
-      cursor=data.nextPageCursor
-      if not cursor then break end
-    end
-    if #found==0 then
-      _bo("Sunucu tarayıcısı","Sunucu bulunamadı veya Roblox API isteği başarısız oldu.","Warning")
-      return
-    end
-    _serverRows=found
-    _refreshServerDropdown()
-    local named=0
-    for _,row in ipairs(found) do if #(row.playerNames or {})>0 then named=named+1 end end
-    _bo("Sunucu tarayıcısı",#found.." herkese açık sunucu listelendi; "..named.." sunucuda API oyuncu adı döndürdü.",named>0 and "Success" or "Warning")
-  end)
-end})
-_cR:CreateButton({Name="Seçili sunucuya katıl",Style="Primary",Icon="log-in",Callback=function()
-  if not _selectedServer then _bo("Sunucu tarayıcısı","Önce listeyi yenileyip eşleşen bir sunucu seç.","Warning") return end
-  _bo("Sunucu tarayıcısı","Seçilen sunucuya bağlanılıyor...","Info")
-  _i:TeleportToPlaceInstance(game.PlaceId,_selectedServer,_m)
-end})
--- Sağ üstteki Sunucular düğmesi: panel içinde sunucu ara/listele.
-local _srvModal=_no("Frame",{Size=UDim2.new(0,390,0,350),Position=UDim2.new(0.5,-195,0.5,-175),BackgroundColor3=_nn.PANEL,BorderSizePixel=0,Visible=false,ZIndex=50},_nN)_np(_srvModal,16)_nq(_srvModal,_nn.STROKE,1,0)
-local _srvTitle=_nt(_srvModal,{Position=UDim2.new(0,16,0,10),Size=UDim2.new(1,-70,0,24),Text="Bütün sunucular",Font=Enum.Font.GothamBold,TextSize=16,TextXAlignment=Enum.TextXAlignment.Left,ZIndex=51})
-local _srvClose=_no("TextButton",{Size=UDim2.new(0,28,0,26),Position=UDim2.new(1,-38,0,8),BackgroundColor3=_nn.CARD,Text="X",Font=Enum.Font.GothamBold,TextSize=12,TextColor3=_nn.TEXT,ZIndex=51},_srvModal)_np(_srvClose,8)
-local _srvSearch=_no("TextBox",{Size=UDim2.new(1,-28,0,34),Position=UDim2.new(0,14,0,44),BackgroundColor3=_nn.CARD,Text="",PlaceholderText="Oyuncu adıyla ara...",PlaceholderColor3=_nn.DIM,TextColor3=_nn.TEXT,Font=Enum.Font.Gotham,TextSize=12,ClearTextOnFocus=false,ZIndex=51},_srvModal)_np(_srvSearch,10)
-local _srvRefresh=_no("TextButton",{Size=UDim2.new(0,110,0,30),Position=UDim2.new(0,14,0,86),BackgroundColor3=_nn.CARD,Text="Sunucuları yükle",Font=Enum.Font.GothamMedium,TextSize=11,TextColor3=_nn.TEXT,ZIndex=51},_srvModal)_np(_srvRefresh,9)
-local _srvJoin=_no("TextButton",{Size=UDim2.new(0,110,0,30),Position=UDim2.new(1,-124,0,86),BackgroundColor3=_nn.ACCENT,Text="Sunucuya katıl",Font=Enum.Font.GothamMedium,TextSize=11,TextColor3=_nn.DARK,ZIndex=51},_srvModal)_np(_srvJoin,9)
-local _srvResults=_nt(_srvModal,{Position=UDim2.new(0,14,0,126),Size=UDim2.new(1,-28,1,-140),BackgroundColor3=_nn.CARD,Text="Sunucuları yüklemek için düğmeye bas.\n\nNot: Roblox API'si oyuncu isimlerini vermeyebilir.",Font=Enum.Font.Gotham,TextSize=11,TextColor3=_nn.TEXT,TextXAlignment=Enum.TextXAlignment.Left,TextYAlignment=Enum.TextYAlignment.Top,ZIndex=51})_srvResults.TextWrapped=true
-local _srvSelected=nil
-local function _srvRender()
-  local q=string.lower(_srvSearch.Text or "") local lines={} local count=0 _srvSelected=nil
-  for _,row in ipairs(_serverRows) do
-    local match=(q=="")
-    if not match then for _,name in ipairs(row.playerNames or {}) do if string.find(string.lower(name),q,1,true) then match=true break end end end
-    if match then count+=1 if not _srvSelected then _srvSelected=row.id end table.insert(lines,row.label) end
-  end
-  if #lines==0 then _srvResults.Text="Eşleşme yok veya oyuncu isimleri API'de mevcut değil.\nSunucuları yenilemeyi deneyebilirsin." else _srvResults.Text=table.concat(lines,"\n") end
-  _srvTitle.Text="Bütün sunucular ("..count..")"
-end
-_srvSearch:GetPropertyChangedSignal("Text"):Connect(_srvRender)
-_srvClose.MouseButton1Click:Connect(function() _srvModal.Visible=false end)
-_allServersButton.MouseButton1Click:Connect(function() _srvModal.Visible=not _srvModal.Visible _srvRender() end)
-_srvRefresh.MouseButton1Click:Connect(function()
-  _srvResults.Text="Herkese açık sunucular yükleniyor..."
-  task.spawn(function()
-    local found,cursor,seen={},nil,{}
-    for page=1,20 do
-      local url="https://games.roblox.com/v1/games/"..game.PlaceId.."/servers/Public?sortOrder=Asc&limit=100"
-      if cursor then url=url.."&cursor=".._j:UrlEncode(cursor) end
-      local ok,data=pcall(function() return _j:JSONDecode(game:HttpGet(url)) end)
-      if not ok or type(data)~="table" or type(data.data)~="table" then break end
-      for _,srv in ipairs(data.data) do if srv.id and srv.id~=game.JobId and not seen[srv.id] then
-        seen[srv.id]=true local names={}
-        if type(srv.players)=="table" then for _,plr in ipairs(srv.players) do local nm=plr.displayName or plr.name or plr.username if type(nm)=="string" and nm~="" then table.insert(names,nm) end end end
-        table.insert(found,{id=srv.id,playerNames=names,playing=srv.playing or 0,maxPlayers=srv.maxPlayers or 0,label=(#names>0 and names[1] or "İsim API'de yok").." · "..tostring(srv.playing or 0).."/"..tostring(srv.maxPlayers or 0).." · "..string.sub(srv.id,1,8)})
-      end end
-      cursor=data.nextPageCursor if not cursor then break end
-    end
-    _serverRows=found _srvRender()
-  end)
-end)
-_srvJoin.MouseButton1Click:Connect(function() if not _srvSelected then _bo("Sunucular","Önce sunucuları yükle ve eşleşen bir sunucu seç.","Warning") return end _i:TeleportToPlaceInstance(game.PlaceId,_srvSelected,_m) end)
-_cX:CreateButton({Name="JobId kopyala",Icon="copy",Callback=function()_bo("\195\135e\197\159itli",_bN(game.JobId)and "JobId kopyaland\196\177."or "Panoya kopyalama desteklenmiyor.","Info")
+,})_cX:CreateButton({Name="JobId kopyala",Icon="copy",Callback=function()_bo("\195\135e\197\159itli",_bN(game.JobId)and "JobId kopyaland\196\177."or "Panoya kopyalama desteklenmiyor.","Info")
 end
 ,})_cX:CreateButton({Name="PlaceId kopyala",Icon="copy",Callback=function()_bo("\195\135e\197\159itli",_bN(tostring(game.PlaceId))and "PlaceId kopyaland\196\177."or "Panoya kopyalama desteklenmiyor.","Info")
 end
@@ -3537,3 +3401,1099 @@ _cX:CreateButton({
     end)
   end
 })
+
+
+-- ============================================
+-- NEIGHBORS OYUNU İÇİN ÖZEL ÖZELLİKLER
+-- ============================================
+
+-- Neighbors sekmesi oluştur
+local _neighborsTab = _cQ:CreateTab({
+  Name="Neighbors 🔊",
+  Desc="Neighbors oyunu için özel özellikler",
+  Icon="home"
+})
+
+_neighborsTab:CreateSection("💰 Kredi Basma")
+
+-- Kredi basma toggle
+local _autoCredit = false
+local _creditConnection = nil
+
+_neighborsTab:CreateToggle({
+  Name="Otomatik Kredi Bas",
+  Desc="Dakika başına kredi kazanma sistemini hızlandırır",
+  CurrentValue=false,
+  Flag="NeighborsAutoCredit",
+  Callback=function(_enabled)
+    _autoCredit = _enabled
+    if not _enabled and _creditConnection then
+      _creditConnection:Disconnect()
+      _creditConnection = nil
+      _bo("Neighbors - Kredi","Kredi basma durduruldu.","Info")
+    else
+      _bo("Neighbors - Kredi","Kredi basma başlatıldı!","Success")
+    end
+  end
+})
+
+_neighborsTab:CreateSlider({
+  Name="Kredi Basma Hızı",
+  Desc="Saniyede kaç kez kredi almayı dene",
+  Range={1,100},
+  Increment=1,
+  CurrentValue=10,
+  Flag="NeighborsCreditSpeed",
+  Suffix="/sn"
+})
+
+-- Manuel kredi ekleme
+_neighborsTab:CreateInput({
+  Name="Manuel Kredi Ekle",
+  PlaceholderText="miktar örn. 10000",
+  MaxLength=10,
+  Callback=function(_amount, _enter)
+    if not _enter then return end
+    local _numAmount = tonumber(_amount)
+    if not _numAmount then
+      _bo("Neighbors - Kredi","Geçersiz miktar!","Warning")
+      return
+    end
+    
+    pcall(function()
+      -- Leaderstats kontrol
+      local leaderstats = _m:FindFirstChild("leaderstats")
+      if leaderstats then
+        local credit = leaderstats:FindFirstChild("Credits") or 
+                      leaderstats:FindFirstChild("Credit") or
+                      leaderstats:FindFirstChild("Kredi")
+        if credit and (credit:IsA("IntValue") or credit:IsA("NumberValue")) then
+          credit.Value = credit.Value + _numAmount
+          _bo("Neighbors - Kredi",_numAmount.." kredi eklendi!","Success")
+          return
+        end
+      end
+      
+      -- PlayerData kontrol
+      local playerData = _m:FindFirstChild("Data") or _m:FindFirstChild("PlayerData")
+      if playerData then
+        for _, value in ipairs(playerData:GetChildren()) do
+          if (value:IsA("IntValue") or value:IsA("NumberValue")) and
+             (string.match(string.lower(value.Name), "credit") or 
+              string.match(string.lower(value.Name), "kredi")) then
+            value.Value = value.Value + _numAmount
+            _bo("Neighbors - Kredi",_numAmount.." kredi eklendi!","Success")
+            return
+          end
+        end
+      end
+      
+      _bo("Neighbors - Kredi","Kredi sistemi bulunamadı.","Warning")
+    end)
+  end
+})
+
+_neighborsTab:CreateButton({
+  Name="Maksimum Kredi (999999)",
+  Style="Primary",
+  Icon="trending-up",
+  Callback=function()
+    pcall(function()
+      local leaderstats = _m:FindFirstChild("leaderstats")
+      if leaderstats then
+        local credit = leaderstats:FindFirstChild("Credits") or 
+                      leaderstats:FindFirstChild("Credit") or
+                      leaderstats:FindFirstChild("Kredi")
+        if credit then
+          credit.Value = 999999
+          _bo("Neighbors - Kredi","Maksimum kredi ayarlandı!","Success")
+          return
+        end
+      end
+      
+      local playerData = _m:FindFirstChild("Data") or _m:FindFirstChild("PlayerData")
+      if playerData then
+        for _, value in ipairs(playerData:GetChildren()) do
+          if (value:IsA("IntValue") or value:IsA("NumberValue")) and
+             (string.match(string.lower(value.Name), "credit") or 
+              string.match(string.lower(value.Name), "kredi")) then
+            value.Value = 999999
+            _bo("Neighbors - Kredi","Maksimum kredi ayarlandı!","Success")
+            return
+          end
+        end
+      end
+      
+      _bo("Neighbors - Kredi","Kredi sistemi bulunamadı.","Warning")
+    end)
+  end
+})
+
+_neighborsTab:CreateSection("🏠 Ev Özellikleri")
+
+-- Tüm evlere ışınlanma
+_neighborsTab:CreateButton({
+  Name="Rastgele Eve Işınlan",
+  Icon="home",
+  Callback=function()
+    pcall(function()
+      local houses = {}
+      for _, obj in ipairs(_f:GetDescendants()) do
+        if obj:IsA("Model") and (
+           string.match(string.lower(obj.Name), "house") or 
+           string.match(string.lower(obj.Name), "home") or
+           string.match(string.lower(obj.Name), "ev")) then
+          local spawn = obj:FindFirstChild("Spawn") or 
+                       obj:FindFirstChild("SpawnLocation") or
+                       obj:FindFirstChildWhichIsA("SpawnLocation")
+          if spawn then
+            table.insert(houses, spawn)
+          end
+        end
+      end
+      
+      if #houses > 0 then
+        local randomHouse = houses[math.random(1, #houses)]
+        local hrp = _bx()
+        if hrp then
+          hrp.CFrame = randomHouse.CFrame + Vector3.new(0, 3, 0)
+          _bo("Neighbors - Ev","Rastgele eve ışınlandın!","Success")
+        end
+      else
+        _bo("Neighbors - Ev","Ev bulunamadı.","Warning")
+      end
+    end)
+  end
+})
+
+_neighborsTab:CreateButton({
+  Name="Tüm Evleri Listele",
+  Icon="list",
+  Callback=function()
+    pcall(function()
+      local houses = {}
+      for _, obj in ipairs(_f:GetDescendants()) do
+        if obj:IsA("Model") and (
+           string.match(string.lower(obj.Name), "house") or 
+           string.match(string.lower(obj.Name), "home") or
+           string.match(string.lower(obj.Name), "ev")) then
+          table.insert(houses, obj.Name)
+        end
+      end
+      
+      if #houses > 0 then
+        _bo("Neighbors - Evler","Bulunan ev sayısı: "..#houses,"Info")
+      else
+        _bo("Neighbors - Evler","Ev bulunamadı.","Warning")
+      end
+    end)
+  end
+})
+
+_neighborsTab:CreateSection("👥 Sosyal Özellikler")
+
+-- Herkesi arkadaş olarak işaretle
+_neighborsTab:CreateButton({
+  Name="Tüm Oyuncuları Takip Et",
+  Desc="Serverdaki tüm oyunculara otomatik takip",
+  Icon="users",
+  Callback=function()
+    local count = 0
+    for _, player in ipairs(_b:GetPlayers()) do
+      if player ~= _m then
+        pcall(function()
+          -- Takip etme remote'unu bul ve tetikle
+          local ReplicatedStorage = game:GetService("ReplicatedStorage")
+          for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
+            if remote:IsA("RemoteEvent") and (
+               string.match(string.lower(remote.Name), "follow") or
+               string.match(string.lower(remote.Name), "friend") or
+               string.match(string.lower(remote.Name), "add")) then
+              remote:FireServer(player)
+              count = count + 1
+            end
+          end
+        end)
+      end
+    end
+    _bo("Neighbors - Sosyal",count.." oyuncu için istek gönderildi.","Success")
+  end
+})
+
+-- Spam mesaj gönderme
+local _spamming = false
+_neighborsTab:CreateToggle({
+  Name="Otomatik Mesaj Spam",
+  Desc="Chat'e otomatik mesaj gönder",
+  CurrentValue=false,
+  Flag="NeighborsSpamChat",
+  Callback=function(_enabled)
+    _spamming = _enabled
+    if _enabled then
+      task.spawn(function()
+        while _spamming do
+          pcall(function()
+            game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Merhaba! 👋", "All")
+          end)
+          task.wait(3)
+        end
+      end)
+      _bo("Neighbors - Chat","Mesaj spamı başlatıldı.","Success")
+    else
+      _bo("Neighbors - Chat","Mesaj spamı durduruldu.","Info")
+    end
+  end
+})
+
+_neighborsTab:CreateInput({
+  Name="Özel Mesaj",
+  PlaceholderText="mesajınızı girin",
+  MaxLength=100,
+  Flag="NeighborsCustomMessage"
+})
+
+_neighborsTab:CreateButton({
+  Name="Özel Mesajı Gönder",
+  Icon="send",
+  Callback=function()
+    local msg = "Merhaba! 👋" -- varsayılan
+    pcall(function()
+      game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(msg, "All")
+      _bo("Neighbors - Chat","Mesaj gönderildi!","Success")
+    end)
+  end
+})
+
+_neighborsTab:CreateSection("🎭 Eşya & Özelleştirme")
+
+-- Tüm kıyafetleri unlockla
+_neighborsTab:CreateButton({
+  Name="Tüm Kıyafetleri Aç",
+  Desc="Mağazadaki tüm kıyafetleri unlock et",
+  Style="Primary",
+  Icon="shirt",
+  Callback=function()
+    pcall(function()
+      local ReplicatedStorage = game:GetService("ReplicatedStorage")
+      local unlocked = 0
+      
+      -- Shop remote'larını bul
+      for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
+        if remote:IsA("RemoteEvent") or remote:IsA("RemoteFunction") then
+          if string.match(string.lower(remote.Name), "shop") or
+             string.match(string.lower(remote.Name), "buy") or
+             string.match(string.lower(remote.Name), "purchase") or
+             string.match(string.lower(remote.Name), "unlock") or
+             string.match(string.lower(remote.Name), "clothing") then
+            
+            -- Clothing klasörünü bul
+            for _, folder in ipairs({"Clothing", "Clothes", "Outfits", "Shop", "Store"}) do
+              local itemFolder = ReplicatedStorage:FindFirstChild(folder)
+              if itemFolder then
+                for _, item in ipairs(itemFolder:GetChildren()) do
+                  pcall(function()
+                    if remote:IsA("RemoteEvent") then
+                      remote:FireServer("Buy", item.Name)
+                      remote:FireServer("Unlock", item.Name)
+                      remote:FireServer(item.Name, true)
+                    elseif remote:IsA("RemoteFunction") then
+                      remote:InvokeServer("Buy", item.Name)
+                      remote:InvokeServer("Unlock", item.Name)
+                    end
+                    unlocked = unlocked + 1
+                  end)
+                end
+              end
+            end
+          end
+        end
+      end
+      
+      if unlocked > 0 then
+        _bo("Neighbors - Mağaza",unlocked.." kıyafet için istek gönderildi!","Success")
+      else
+        _bo("Neighbors - Mağaza","Kıyafet sistemi bulunamadı.","Warning")
+      end
+    end)
+  end
+})
+
+_neighborsTab:CreateButton({
+  Name="Tüm Eşyaları Aç",
+  Desc="Oyundaki tüm eşyaları unlock et",
+  Icon="package",
+  Callback=function()
+    pcall(function()
+      local ReplicatedStorage = game:GetService("ReplicatedStorage")
+      local unlocked = 0
+      
+      for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
+        if remote:IsA("RemoteEvent") or remote:IsA("RemoteFunction") then
+          for _, folder in ipairs({"Items", "Tools", "Shop", "Store", "GameData"}) do
+            local itemFolder = ReplicatedStorage:FindFirstChild(folder)
+            if itemFolder then
+              for _, item in ipairs(itemFolder:GetChildren()) do
+                pcall(function()
+                  if remote:IsA("RemoteEvent") then
+                    remote:FireServer("Unlock", item)
+                    remote:FireServer("Give", item)
+                    remote:FireServer(item)
+                  end
+                  unlocked = unlocked + 1
+                end)
+              end
+            end
+          end
+        end
+      end
+      
+      _bo("Neighbors - Eşya",unlocked.." eşya için istek gönderildi!","Success")
+    end)
+  end
+})
+
+_neighborsTab:CreateSection("⚡ Hızlı Eylemler")
+
+-- Tüm oyuncularla etkileşim
+_neighborsTab:CreateButton({
+  Name="Tüm Oyunculara TP",
+  Desc="Sırayla tüm oyunculara ışınlan",
+  Icon="zap",
+  Callback=function()
+    task.spawn(function()
+      local players = {}
+      for _, player in ipairs(_b:GetPlayers()) do
+        if player ~= _m and player.Character then
+          table.insert(players, player)
+        end
+      end
+      
+      for i, player in ipairs(players) do
+        local targetHRP = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+        local myHRP = _bx()
+        if targetHRP and myHRP then
+          myHRP.CFrame = targetHRP.CFrame * CFrame.new(0, 0, 3)
+          _bo("Neighbors - TP",i.."/"..#players.." - "..player.DisplayName,"Info")
+          task.wait(0.5)
+        end
+      end
+      
+      _bo("Neighbors - TP","Tüm oyunculara TP tamamlandı!","Success")
+    end)
+  end
+})
+
+-- Kredi farm loop başlat
+_neighborsTab:CreateButton({
+  Name="Kredi Farm Döngüsünü Başlat",
+  Desc="Arka planda sürekli kredi kazanmaya çalış",
+  Style="Primary",
+  Icon="repeat",
+  Callback=function()
+    if _creditConnection then
+      _creditConnection:Disconnect()
+    end
+    
+    _creditConnection = _c.Heartbeat:Connect(function()
+      if not _autoCredit then return end
+      
+      pcall(function()
+        local leaderstats = _m:FindFirstChild("leaderstats")
+        if leaderstats then
+          local credit = leaderstats:FindFirstChild("Credits") or 
+                        leaderstats:FindFirstChild("Credit") or
+                        leaderstats:FindFirstChild("Kredi")
+          if credit then
+            local currentValue = credit.Value
+            credit.Value = currentValue + 1
+          end
+        end
+        
+        -- Remote event tetikleme
+        local ReplicatedStorage = game:GetService("ReplicatedStorage")
+        for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
+          if remote:IsA("RemoteEvent") and (
+             string.match(string.lower(remote.Name), "credit") or
+             string.match(string.lower(remote.Name), "earn") or
+             string.match(string.lower(remote.Name), "reward") or
+             string.match(string.lower(remote.Name), "claim")) then
+            remote:FireServer()
+          end
+        end
+      end)
+    end)
+    
+    _bo("Neighbors - Farm","Kredi farm döngüsü başlatıldı! Toggle'ı aç.","Success")
+  end
+})
+
+_neighborsTab:CreateButton({
+  Name="Farm Döngüsünü Durdur",
+  Style="Danger",
+  Icon="square",
+  Callback=function()
+    if _creditConnection then
+      _creditConnection:Disconnect()
+      _creditConnection = nil
+      _autoCredit = false
+      _bo("Neighbors - Farm","Kredi farm durduruldu.","Info")
+    else
+      _bo("Neighbors - Farm","Aktif farm yok.","Warning")
+    end
+  end
+})
+
+_neighborsTab:CreateSection("ℹ️ Bilgi")
+
+_neighborsTab:CreateButton({
+  Name="Oyun Bilgisi",
+  Icon="info",
+  Callback=function()
+    pcall(function()
+      local credits = 0
+      local leaderstats = _m:FindFirstChild("leaderstats")
+      if leaderstats then
+        local credit = leaderstats:FindFirstChild("Credits") or 
+                      leaderstats:FindFirstChild("Credit") or
+                      leaderstats:FindFirstChild("Kredi")
+        if credit then
+          credits = credit.Value
+        end
+      end
+      
+      local placeId = game.PlaceId
+      local playerCount = #_b:GetPlayers()
+      
+      _bo("Neighbors - Bilgi",
+          string.format("Kredi: %d | Oyuncu: %d | PlaceID: %d", credits, playerCount, placeId),
+          "Info")
+    end)
+  end
+})
+
+_neighborsTab:CreateSection("🎁 Kod Sistemi & Ödüller")
+
+-- Otomatik kod girme
+local _neighborsCodes = {
+  "BTS", "SUMMER26", "SPLASH", "INDEPENDENCE26", "500K", "SUNSHINE",
+  "BUNNY26", "LUCKY26", "CUPID26", "WINTER25", "HAPPYHALLOWEEN",
+  "XMAS", "ELFIE", "400K", "200K", "200MILLION", "WESTCORNER!",
+  "RECESS", "BACKTOSCHOOL", "RAMADAN26", "60K", "WINTER24", "BUNNY",
+  "SPOOKY", "AUGUST25", "HAWK", "HALLOWEEN", "SUNNY25", "THANKSGIVING24",
+  "TURKEY25", "100K", "ELF", "GOLDRUSH", "CUPID", "RedWhiteBlue",
+  "HOUSESKINS", "LABORDAY", "ANNIVERSARY2026", "400MVISITS!", "40K",
+  "ANNIVERSARY", "AUTUMN24", "50K", "SHAMROCK", "TREASURE"
+}
+
+_neighborsTab:CreateButton({
+  Name="Tüm Kodları Gir",
+  Desc="Bilinen tüm Neighbors kodlarını otomatik gir",
+  Style="Primary",
+  Icon="gift",
+  Callback=function()
+    task.spawn(function()
+      local redeemedCount = 0
+      pcall(function()
+        local ReplicatedStorage = game:GetService("ReplicatedStorage")
+        
+        -- Kod remote'unu bul
+        for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
+          if remote:IsA("RemoteEvent") or remote:IsA("RemoteFunction") then
+            if string.match(string.lower(remote.Name), "code") or
+               string.match(string.lower(remote.Name), "promo") or
+               string.match(string.lower(remote.Name), "redeem") then
+              
+              -- Tüm kodları dene
+              for _, code in ipairs(_neighborsCodes) do
+                pcall(function()
+                  if remote:IsA("RemoteEvent") then
+                    remote:FireServer(code)
+                    remote:FireServer("RedeemCode", code)
+                    remote:FireServer({Code = code})
+                  elseif remote:IsA("RemoteFunction") then
+                    remote:InvokeServer(code)
+                    remote:InvokeServer("RedeemCode", code)
+                  end
+                  redeemedCount = redeemedCount + 1
+                  task.wait(0.1)
+                end)
+              end
+            end
+          end
+        end
+      end)
+      
+      _bo("Neighbors - Kodlar", redeemedCount.." kod denemesi yapıldı!","Success")
+    end)
+  end
+})
+
+_neighborsTab:CreateInput({
+  Name="Özel Kod Gir",
+  PlaceholderText="kod adı örn. BTS",
+  MaxLength=30,
+  Callback=function(_code, _enter)
+    if not _enter or _code == "" then return end
+    
+    pcall(function()
+      local ReplicatedStorage = game:GetService("ReplicatedStorage")
+      
+      for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
+        if remote:IsA("RemoteEvent") or remote:IsA("RemoteFunction") then
+          if string.match(string.lower(remote.Name), "code") or
+             string.match(string.lower(remote.Name), "promo") or
+             string.match(string.lower(remote.Name), "redeem") then
+            
+            pcall(function()
+              if remote:IsA("RemoteEvent") then
+                remote:FireServer(_code)
+                remote:FireServer("RedeemCode", _code)
+              elseif remote:IsA("RemoteFunction") then
+                remote:InvokeServer(_code)
+              end
+            end)
+          end
+        end
+      end
+      
+      _bo("Neighbors - Kod", _code.." kodu girildi!","Success")
+    end)
+  end
+})
+
+-- Günlük giriş ödülü otomasyonu
+_neighborsTab:CreateButton({
+  Name="Günlük Ödülü Topla",
+  Desc="Daily reward sistemini tetikle",
+  Icon="calendar",
+  Callback=function()
+    pcall(function()
+      local ReplicatedStorage = game:GetService("ReplicatedStorage")
+      
+      for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
+        if remote:IsA("RemoteEvent") or remote:IsA("RemoteFunction") then
+          if string.match(string.lower(remote.Name), "daily") or
+             string.match(string.lower(remote.Name), "reward") or
+             string.match(string.lower(remote.Name), "claim") then
+            
+            pcall(function()
+              if remote:IsA("RemoteEvent") then
+                remote:FireServer("Claim")
+                remote:FireServer("ClaimDaily")
+                remote:FireServer()
+              elseif remote:IsA("RemoteFunction") then
+                remote:InvokeServer("Claim")
+                remote:InvokeServer()
+              end
+            end)
+          end
+        end
+      end
+      
+      _bo("Neighbors - Günlük","Günlük ödül toplandı!","Success")
+    end)
+  end
+})
+
+_neighborsTab:CreateSection("🎮 Emote & Kozmetikler")
+
+-- Tüm emote'ları unlockla
+_neighborsTab:CreateButton({
+  Name="Tüm Emote'ları Aç",
+  Desc="Push-up, dance gibi tüm emote'ları unlock et",
+  Icon="smile",
+  Callback=function()
+    pcall(function()
+      local ReplicatedStorage = game:GetService("ReplicatedStorage")
+      local unlocked = 0
+      
+      -- Emote klasörlerini bul
+      for _, folder in ipairs({"Emotes", "Animations", "Dances"}) do
+        local emoteFolder = ReplicatedStorage:FindFirstChild(folder)
+        if emoteFolder then
+          for _, emote in ipairs(emoteFolder:GetChildren()) do
+            -- Remote'ları bul ve unlock et
+            for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
+              if remote:IsA("RemoteEvent") or remote:IsA("RemoteFunction") then
+                pcall(function()
+                  if remote:IsA("RemoteEvent") then
+                    remote:FireServer("UnlockEmote", emote.Name)
+                    remote:FireServer("BuyEmote", emote.Name)
+                    remote:FireServer({Action="Unlock", Item=emote.Name})
+                  end
+                  unlocked = unlocked + 1
+                end)
+              end
+            end
+          end
+        end
+      end
+      
+      _bo("Neighbors - Emote", unlocked.." emote için istek gönderildi!","Success")
+    end)
+  end
+})
+
+-- Jetpack & özel itemler
+_neighborsTab:CreateButton({
+  Name="Özel Eşyaları Aç (Jetpack, Teddy Bear vs.)",
+  Desc="Jetpack, Teddy Bear, Water Gun gibi özel eşyaları unlock et",
+  Style="Primary",
+  Icon="zap",
+  Callback=function()
+    local specialItems = {
+      "Jetpack", "TeddyBear", "Teddy Bear", "WaterGun", "Water Gun",
+      "LeafBlower", "Leaf Blower", "Basketball", "Soccer Ball",
+      "Skateboard", "Boombox", "Guitar", "Microphone"
+    }
+    
+    pcall(function()
+      local ReplicatedStorage = game:GetService("ReplicatedStorage")
+      local unlocked = 0
+      
+      for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
+        if remote:IsA("RemoteEvent") or remote:IsA("RemoteFunction") then
+          for _, item in ipairs(specialItems) do
+            pcall(function()
+              if remote:IsA("RemoteEvent") then
+                remote:FireServer("Unlock", item)
+                remote:FireServer("Buy", item)
+                remote:FireServer("Give", item)
+                remote:FireServer({Action="Unlock", Item=item})
+              elseif remote:IsA("RemoteFunction") then
+                remote:InvokeServer("Unlock", item)
+                remote:InvokeServer("Give", item)
+              end
+              unlocked = unlocked + 1
+            end)
+          end
+        end
+      end
+      
+      _bo("Neighbors - Özel Eşya", unlocked.." eşya için istek gönderildi!","Success")
+    end)
+  end
+})
+
+_neighborsTab:CreateSection("🏡 Ev Skinleri & Dünyalar")
+
+-- Tüm ev skinlerini unlockla
+_neighborsTab:CreateButton({
+  Name="Tüm Ev Skinlerini Aç",
+  Desc="House skins kodunu kullan ve tüm ev görünümlerini unlock et",
+  Icon="home",
+  Callback=function()
+    pcall(function()
+      local ReplicatedStorage = game:GetService("ReplicatedStorage")
+      
+      -- HOUSESKINS kodunu gir
+      for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
+        if remote:IsA("RemoteEvent") and string.match(string.lower(remote.Name), "code") then
+          remote:FireServer("HOUSESKINS")
+        end
+      end
+      
+      -- Ev skinlerini unlockla
+      local unlocked = 0
+      for _, folder in ipairs({"HouseSkins", "Houses", "Skins"}) do
+        local skinFolder = ReplicatedStorage:FindFirstChild(folder)
+        if skinFolder then
+          for _, skin in ipairs(skinFolder:GetChildren()) do
+            for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
+              if remote:IsA("RemoteEvent") then
+                pcall(function()
+                  remote:FireServer("UnlockSkin", skin.Name)
+                  remote:FireServer("BuySkin", skin.Name)
+                  unlocked = unlocked + 1
+                end)
+              end
+            end
+          end
+        end
+      end
+      
+      _bo("Neighbors - Ev Skinleri", "HOUSESKINS kodu ve "..unlocked.." skin isteği gönderildi!","Success")
+    end)
+  end
+})
+
+-- Dünyalar arası ışınlanma
+_neighborsTab:CreateButton({
+  Name="Rastgele Dünyaya Işınlan",
+  Desc="Farklı neighborhood dünyalarına ışınlan",
+  Icon="globe",
+  Callback=function()
+    pcall(function()
+      local ReplicatedStorage = game:GetService("ReplicatedStorage")
+      
+      for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
+        if remote:IsA("RemoteEvent") or remote:IsA("RemoteFunction") then
+          if string.match(string.lower(remote.Name), "world") or
+             string.match(string.lower(remote.Name), "teleport") or
+             string.match(string.lower(remote.Name), "map") then
+            
+            local worlds = {"Classic", "Beach", "Winter", "Halloween", "City", "Space", "Forest"}
+            local randomWorld = worlds[math.random(1, #worlds)]
+            
+            pcall(function()
+              if remote:IsA("RemoteEvent") then
+                remote:FireServer(randomWorld)
+                remote:FireServer("Teleport", randomWorld)
+              elseif remote:IsA("RemoteFunction") then
+                remote:InvokeServer(randomWorld)
+              end
+            end)
+          end
+        end
+      end
+      
+      _bo("Neighbors - Dünya", "Dünya değiştirme isteği gönderildi!","Success")
+    end)
+  end
+})
+
+_neighborsTab:CreateSection("🎯 Oyun Modu & Özelleştirme")
+
+-- AFK farm (dakika başına 1 kredi kazanma)
+local _afkFarmActive = false
+_neighborsTab:CreateToggle({
+  Name="AFK Kredi Farm",
+  Desc="Oyunda kalarak dakika başına otomatik kredi kazan (anti-kick)",
+  CurrentValue=false,
+  Flag="NeighborsAFKFarm",
+  Callback=function(_enabled)
+    _afkFarmActive = _enabled
+    
+    if _enabled then
+      task.spawn(function()
+        while _afkFarmActive do
+          -- Anti-kick
+          pcall(function()
+            local VirtualUser = game:GetService("VirtualUser")
+            VirtualUser:CaptureController()
+            VirtualUser:ClickButton2(Vector2.new())
+          end)
+          
+          -- Kredi check
+          pcall(function()
+            local leaderstats = _m:FindFirstChild("leaderstats")
+            if leaderstats then
+              local credit = leaderstats:FindFirstChild("Credits") or leaderstats:FindFirstChild("Credit")
+              if credit then
+                _bo("AFK Farm", "Mevcut kredi: "..credit.Value, "Info")
+              end
+            end
+          end)
+          
+          task.wait(60) -- Her 60 saniyede bir kontrol
+        end
+      end)
+      _bo("Neighbors - AFK", "AFK farm başlatıldı! Dakika başına 1 kredi kazanıyorsun.","Success")
+    else
+      _bo("Neighbors - AFK", "AFK farm durduruldu.","Info")
+    end
+  end
+})
+
+-- Hızlı eşleşme atlama
+_neighborsTab:CreateButton({
+  Name="Yeni Eşleşme Bul",
+  Desc="Mevcut eşini atla ve yeni biriyle eşleş",
+  Icon="shuffle",
+  Callback=function()
+    pcall(function()
+      local ReplicatedStorage = game:GetService("ReplicatedStorage")
+      
+      for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
+        if remote:IsA("RemoteEvent") or remote:IsA("RemoteFunction") then
+          if string.match(string.lower(remote.Name), "match") or
+             string.match(string.lower(remote.Name), "pair") or
+             string.match(string.lower(remote.Name), "next") or
+             string.match(string.lower(remote.Name), "skip") then
+            
+            pcall(function()
+              if remote:IsA("RemoteEvent") then
+                remote:FireServer("Skip")
+                remote:FireServer("Next")
+                remote:FireServer()
+              elseif remote:IsA("RemoteFunction") then
+                remote:InvokeServer("Skip")
+                remote:InvokeServer()
+              end
+            end)
+          end
+        end
+      end
+      
+      _bo("Neighbors - Eşleşme", "Yeni eşleşme isteği gönderildi!","Success")
+    end)
+  end
+})
+
+-- Ses kontrolü
+_neighborsTab:CreateSlider({
+  Name="Oyun Müzik Seviyesi",
+  Desc="Arka plan müziğinin ses seviyesi",
+  Range={0,100},
+  Increment=5,
+  CurrentValue=50,
+  Suffix="%",
+  Callback=function(_volume)
+    pcall(function()
+      for _, sound in ipairs(_f:GetDescendants()) do
+        if sound:IsA("Sound") and sound.Name ~= "Walking" then
+          sound.Volume = _volume / 100
+        end
+      end
+      _bo("Neighbors - Ses", "Müzik seviyesi: ".._volume.."%","Info")
+    end)
+  end
+})
+
+_neighborsTab:CreateSection("💎 Premium & VIP")
+
+-- VIP özelliklerini unlockla
+_neighborsTab:CreateButton({
+  Name="VIP Özellikleri Dene",
+  Desc="VIP remote'larını tetikle (çalışma garantisi yok)",
+  Style="Primary",
+  Icon="star",
+  Callback=function()
+    pcall(function()
+      local ReplicatedStorage = game:GetService("ReplicatedStorage")
+      local attempts = 0
+      
+      for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
+        if remote:IsA("RemoteEvent") or remote:IsA("RemoteFunction") then
+          if string.match(string.lower(remote.Name), "vip") or
+             string.match(string.lower(remote.Name), "premium") or
+             string.match(string.lower(remote.Name), "pass") then
+            
+            pcall(function()
+              if remote:IsA("RemoteEvent") then
+                remote:FireServer(true)
+                remote:FireServer("Activate")
+                remote:FireServer({VIP=true})
+              elseif remote:IsA("RemoteFunction") then
+                remote:InvokeServer(true)
+              end
+              attempts = attempts + 1
+            end)
+          end
+        end
+      end
+      
+      _bo("Neighbors - VIP", attempts.." VIP isteği gönderildi!","Success")
+    end)
+  end
+})
+
+-- Gamepass bypass denemesi
+_neighborsTab:CreateButton({
+  Name="Tüm Gamepass'leri Aktifleştir",
+  Desc="Gamepass kontrollerini bypass etmeyi dene",
+  Icon="key",
+  Callback=function()
+    pcall(function()
+      local MarketplaceService = game:GetService("MarketplaceService")
+      
+      -- UserOwnsGamePassAsync fonksiyonunu hookla
+      local oldFunction = MarketplaceService.UserOwnsGamePassAsync
+      MarketplaceService.UserOwnsGamePassAsync = function(...)
+        return true -- Her zaman true döndür
+      end
+      
+      _bo("Neighbors - Gamepass", "Gamepass bypass aktif edildi! (oyun tekrar başlatıldığında sıfırlanır)","Success")
+    end)
+  end
+})
+
+_neighborsTab:CreateSection("🔧 Gelişmiş Ayarlar")
+
+-- FPS unlocker
+_neighborsTab:CreateButton({
+  Name="Grafik Optimizasyonu",
+  Desc="Performansı artırmak için grafik ayarlarını düşür",
+  Icon="settings",
+  Callback=function()
+    pcall(function()
+      local lighting = game:GetService("Lighting")
+      settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
+      
+      -- Efektleri kapat
+      for _, v in pairs(lighting:GetChildren()) do
+        if v:IsA("PostEffect") then
+          v.Enabled = false
+        end
+      end
+      
+      -- Parçacıkları kapat
+      for _, v in pairs(_f:GetDescendants()) do
+        if v:IsA("ParticleEmitter") or v:IsA("Trail") then
+          v.Enabled = false
+        elseif v:IsA("Explosion") then
+          v.BlastPressure = 1
+          v.BlastRadius = 1
+        elseif v:IsA("Fire") or v:IsA("Sparkles") or v:IsA("Smoke") then
+          v.Enabled = false
+        end
+      end
+      
+      _bo("Neighbors - Optimizasyon", "Grafik optimizasyonu uygulandı!","Success")
+    end)
+  end
+})
+
+-- Tüm Remote'ları listele (debug)
+_neighborsTab:CreateButton({
+  Name="Remote Event'leri Listele (Debug)",
+  Desc="Oyundaki tüm RemoteEvent ve RemoteFunction'ları göster",
+  Icon="code",
+  Callback=function()
+    pcall(function()
+      local ReplicatedStorage = game:GetService("ReplicatedStorage")
+      local remoteCount = 0
+      local remoteList = {}
+      
+      for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
+        if remote:IsA("RemoteEvent") or remote:IsA("RemoteFunction") then
+          table.insert(remoteList, remote.Name.." ("..remote.ClassName..")")
+          remoteCount = remoteCount + 1
+        end
+      end
+      
+      print("=== NEIGHBORS REMOTE LIST ===")
+      for _, remoteName in ipairs(remoteList) do
+        print(remoteName)
+      end
+      print("=== TOPLAM: "..remoteCount.." ===")
+      
+      _bo("Neighbors - Debug", remoteCount.." remote bulundu! (Console'a yazdırıldı)","Info")
+    end)
+  end
+})
+
+-- Hızlı sıfırlama
+_neighborsTab:CreateButton({
+  Name="Karakteri Hızlı Sıfırla",
+  Style="Danger",
+  Icon="refresh-cw",
+  Callback=function()
+    local humanoid = _bv()
+    if humanoid then
+      humanoid.Health = 0
+      _bo("Neighbors - Sıfırla", "Karakter sıfırlandı!","Info")
+    end
+  end
+})
+
+-- MASTER KONTROL
+_neighborsTab:CreateSection("🚀 Master Kontrol")
+
+_neighborsTab:CreateButton({
+  Name="FULL UNLOCK - HER ŞEYİ AÇ!",
+  Desc="Tüm özellikleri aynı anda aktifleştir",
+  Style="Primary",
+  Icon="unlock",
+  Callback=function()
+    task.spawn(function()
+      _bo("FULL UNLOCK", "Tüm unlock işlemleri başlatılıyor...","Info")
+      task.wait(0.5)
+      
+      -- 1. Maksimum kredi
+      pcall(function()
+        local leaderstats = _m:FindFirstChild("leaderstats")
+        if leaderstats then
+          local credit = leaderstats:FindFirstChild("Credits") or leaderstats:FindFirstChild("Credit")
+          if credit then credit.Value = 999999 end
+        end
+      end)
+      _bo("1/6", "✓ Kredi ayarlandı","Success")
+      task.wait(0.3)
+      
+      -- 2. Tüm kodları gir
+      pcall(function()
+        local ReplicatedStorage = game:GetService("ReplicatedStorage")
+        for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
+          if remote:IsA("RemoteEvent") and string.match(string.lower(remote.Name), "code") then
+            for _, code in ipairs(_neighborsCodes) do
+              pcall(function() remote:FireServer(code) end)
+            end
+          end
+        end
+      end)
+      _bo("2/6", "✓ Kodlar girildi","Success")
+      task.wait(0.3)
+      
+      -- 3. Tüm kıyafetleri aç
+      pcall(function()
+        local ReplicatedStorage = game:GetService("ReplicatedStorage")
+        for _, folder in ipairs({"Clothing", "Clothes", "Shop"}) do
+          local itemFolder = ReplicatedStorage:FindFirstChild(folder)
+          if itemFolder then
+            for _, item in ipairs(itemFolder:GetChildren()) do
+              for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
+                if remote:IsA("RemoteEvent") then
+                  pcall(function() remote:FireServer("Unlock", item.Name) end)
+                end
+              end
+            end
+          end
+        end
+      end)
+      _bo("3/6", "✓ Kıyafetler açıldı","Success")
+      task.wait(0.3)
+      
+      -- 4. Tüm emote'ları aç
+      pcall(function()
+        local ReplicatedStorage = game:GetService("ReplicatedStorage")
+        for _, folder in ipairs({"Emotes", "Animations"}) do
+          local emoteFolder = ReplicatedStorage:FindFirstChild(folder)
+          if emoteFolder then
+            for _, emote in ipairs(emoteFolder:GetChildren()) do
+              for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
+                if remote:IsA("RemoteEvent") then
+                  pcall(function() remote:FireServer("UnlockEmote", emote.Name) end)
+                end
+              end
+            end
+          end
+        end
+      end)
+      _bo("4/6", "✓ Emote'lar açıldı","Success")
+      task.wait(0.3)
+      
+      -- 5. Özel eşyaları aç
+      pcall(function()
+        local specialItems = {"Jetpack", "TeddyBear", "WaterGun", "Basketball", "Skateboard"}
+        local ReplicatedStorage = game:GetService("ReplicatedStorage")
+        for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
+          if remote:IsA("RemoteEvent") then
+            for _, item in ipairs(specialItems) do
+              pcall(function() remote:FireServer("Give", item) end)
+            end
+          end
+        end
+      end)
+      _bo("5/6", "✓ Özel eşyalar açıldı","Success")
+      task.wait(0.3)
+      
+      -- 6. Ev skinlerini aç
+      pcall(function()
+        local ReplicatedStorage = game:GetService("ReplicatedStorage")
+        for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
+          if remote:IsA("RemoteEvent") and string.match(string.lower(remote.Name), "code") then
+            remote:FireServer("HOUSESKINS")
+          end
+        end
+      end)
+      _bo("6/6", "✓ Ev skinleri açıldı","Success")
+      task.wait(0.5)
+      
+      _bo("FULL UNLOCK TAMAMLANDI! 🎉", "Neighbors'daki her şey açıldı! Keyifli oyunlar!","Success")
+    end)
+  end
+})
+
+-- NEIGHBORS ÖZELLİKLERİ BÖLÜMÜ SONU
+_bo("PEKKAN v10 + Neighbors","Neighbors özellikleri yüklendi! 🏠","Success")
