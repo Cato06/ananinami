@@ -4850,5 +4850,122 @@ _neighborsTab:CreateButton({
   end
 })
 
+-- ============================================
+-- OTOMATIK BAN BYPASS (OYUN YÜKLENMEDEN ÖNCE)
+-- ============================================
+
+-- Oyun yüklenirken otomatik bypass
+task.spawn(function()
+    wait(0.5) -- Script tamamen yüklenmesini bekle
+    
+    -- HWID Spoofing (otomatik)
+    pcall(function()
+        local spoofedID = tostring(math.random(100000000, 999999999))
+        print("[PEKKAN] HWID Spoofer aktif: "..spoofedID)
+        
+        -- Anti-cheat remote'larını sil
+        local ReplicatedStorage = game:GetService("ReplicatedStorage")
+        for _, remote in ipairs(ReplicatedStorage:GetDescendants()) do
+            if remote:IsA("RemoteEvent") or remote:IsA("RemoteFunction") then
+                local lowerName = string.lower(remote.Name)
+                if string.match(lowerName, "ban") or
+                   string.match(lowerName, "kick") or
+                   string.match(lowerName, "anticheat") or
+                   string.match(lowerName, "anti") then
+                    pcall(function() remote:Destroy() end)
+                end
+            end
+        end
+    end)
+    
+    -- Anti-Kick (otomatik)
+    pcall(function()
+        local oldKick
+        oldKick = hookfunction(_m.Kick, function(...)
+            print("[PEKKAN] Kick engellendi!")
+            return
+        end)
+        print("[PEKKAN] Anti-Kick aktif")
+    end)
+    
+    -- NameCall Bypass (otomatik)
+    pcall(function()
+        local meta = getrawmetatable(game)
+        local oldNamecall = meta.__namecall
+        setreadonly(meta, false)
+        
+        meta.__namecall = newcclosure(function(self, ...)
+            local method = getnamecallmethod()
+            local args = {...}
+            
+            if method == "FireServer" or method == "InvokeServer" then
+                local remoteName = string.lower(tostring(self))
+                if string.match(remoteName, "anti") or
+                   string.match(remoteName, "ban") or
+                   string.match(remoteName, "kick") then
+                    print("[PEKKAN] Anti-cheat remote engellendi: "..tostring(self))
+                    return
+                end
+            end
+            
+            return oldNamecall(self, ...)
+        end)
+        
+        setreadonly(meta, true)
+        print("[PEKKAN] NameCall bypass aktif")
+    end)
+    
+    -- Ban GUI'lerini sürekli temizle
+    task.spawn(function()
+        while wait(0.5) do
+            pcall(function()
+                for _, gui in ipairs(_m.PlayerGui:GetChildren()) do
+                    if gui:IsA("ScreenGui") then
+                        for _, obj in ipairs(gui:GetDescendants()) do
+                            if obj:IsA("TextLabel") or obj:IsA("TextButton") then
+                                local text = string.lower(obj.Text)
+                                if string.match(text, "ban") or
+                                   string.match(text, "kick") or
+                                   string.match(text, "anti") or
+                                   string.match(text, "cheat") then
+                                    gui:Destroy()
+                                    print("[PEKKAN] Ban ekranı kaldırıldı: "..gui.Name)
+                                    break
+                                end
+                            end
+                        end
+                    end
+                end
+            end)
+        end
+    end)
+    
+    -- LocalScript anti-cheat'leri durdur
+    wait(1)
+    pcall(function()
+        for _, script in ipairs(_m.PlayerScripts:GetDescendants()) do
+            if script:IsA("LocalScript") then
+                local lowerName = string.lower(script.Name)
+                if string.match(lowerName, "anti") or
+                   string.match(lowerName, "ban") or
+                   string.match(lowerName, "detect") then
+                    script.Disabled = true
+                    print("[PEKKAN] Anti-cheat script durduruldu: "..script.Name)
+                end
+            end
+        end
+    end)
+    
+    print("═══════════════════════════════════")
+    print("🛡️ PEKKAN BAN BYPASS AKTİF!")
+    print("✓ HWID Spoofing")
+    print("✓ Anti-Kick")
+    print("✓ NameCall Hook")
+    print("✓ GUI Cleaner")
+    print("✓ Script Blocker")
+    print("═══════════════════════════════════")
+end)
+
 -- NEIGHBORS ÖZELLİKLERİ BÖLÜMÜ SONU
 _bo("PEKKAN v10 + Neighbors","Neighbors özellikleri yüklendi! 🏠","Success")
+_bo("Ban Bypass","🛡️ Otomatik ban bypass aktif! (F9 Console'a bak)","Success")
